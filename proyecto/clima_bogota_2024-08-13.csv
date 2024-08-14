@@ -1,0 +1,33 @@
+Fecha,Ciudad,Temperatura (K),Humedad (%),Descripción,Lluvia (mm),Nieve (mm)
+20:02.1,Bogota,290.88,52,few clouds,0,0
+30:01.8,Bogota,290.88,52,few clouds,0,0
+40:02.2,Bogota,290.88,52,few clouds,0,0
+00:05.5,Bogota,290.88,52,few clouds,0,0
+10:02.4,Bogota,290.88,52,few clouds,0,0
+20:01.9,Bogota,288.88,59,few clouds,0,0
+30:02.4,Bogota,288.88,59,few clouds,0,0
+40:02.1,Bogota,288.88,59,few clouds,0,0
+50:01.7,Bogota,288.88,59,few clouds,0,0
+00:02.4,Bogota,288.88,59,few clouds,0,0
+10:02.2,Bogota,286.88,72,scattered clouds,0,0
+20:01.6,Bogota,286.88,72,scattered clouds,0,0
+30:02.3,Bogota,286.88,72,scattered clouds,0,0
+00:01.9,Bogota,286.88,72,scattered clouds,0,0
+10:02.5,Bogota,287.88,67,broken clouds,0,0
+20:02.1,Bogota,287.88,67,broken clouds,0,0
+30:01.8,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 20:40:02.704692,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 20:50:02.637389,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 21:00:02.641782,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 21:10:02.611752,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 21:20:02.681432,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 21:30:02.671536,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 21:40:02.212171,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 21:50:01.699993,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 22:00:02.212856,Bogota,287.88,67,broken clouds,0,0
+2024-08-13 22:10:01.563107,Bogota,286.88,72,broken clouds,0,0
+2024-08-13 22:20:01.940955,Bogota,286.88,72,broken clouds,0,0
+2024-08-13 22:30:02.879215,Bogota,286.88,72,broken clouds,0,0
+2024-08-13 22:40:02.367151,Bogota,286.88,72,broken clouds,0,0
+2024-08-13 22:50:01.847483,Bogota,286.88,72,broken clouds,0,0
+2024-08-13 23:00:02.276513,Bogota,286.88,72,broken clouds,0,0

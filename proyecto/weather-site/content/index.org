@@ -1,0 +1,811 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil expand-links:t f:t
+#+options: inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
+#+options: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+title: Proyecto ICCD332 Arquitectura de Computadores
+#+date: 2024-08-13
+#+author:Sebastian Morales
+#+email: sebastian.morales02@epn.edu.ec
+#+language: es
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 27.1 (Org mode 9.7.5)
+#+cite_export:
+* City Weather APP
+Este es el proyecto de fin de semestre en donde se pretende demostrar
+las destrezas obtenidas durante el transcurso de la asignatura de
+**Arquitectura de Computadores**.
+
+1. Conocimientos de sistema operativo Linux
+2. Conocimientos de Emacs/Jupyter
+3. Configuración de Entorno para Data Science con Mamba/Anaconda
+4. Literate Programming
+ 
+** Estructura del proyecto
+Se recomienda que el proyecto se cree en el /home/ del sistema
+operativo i.e. /home/<user>/. Allí se creará la carpeta /CityWeather/
+#+begin_src shell :results output :exports both
+mkdir proyecto
+cd proyecto
+pwd
+#+end_src
+
+#+RESULTS:
+: /home/sebastianmorales/proyecto
+
+El proyecto ha de tener los siguientes archivos y
+subdirectorios. Adaptar los nombres de los archivos según las ciudades
+específicas del grupo.
+
+#+begin_src shell :results output :exports results
+cd
+cd proyecto
+pwd
+tree
+#+end_src
+
+#+RESULTS:
+#+begin_example
+/home/sebastianmorales/proyecto
+.
+├── CityTemperatureAnalysis.ipynb
+├── clima_bogota_2024-08-13.csv
+├── debug.log
+├── get-weather.sh
+├── main.py
+├── output.log
+└── weather-site
+    ├── build-site.el
+    ├── build.sh
+    ├── content
+    │   ├── #index.org#
+    │   ├── images
+    │   │   ├── humidity_2024-08-13.png
+    │   │   ├── temperature.pdf
+    │   │   ├── temperature.png
+    │   │   └── temperature_2024-08-13.png
+    │   ├── index.org
+    │   └── index.org~
+    └── public
+        ├── images
+        │   ├── humidity_2024-08-13.png
+        │   ├── temperature.png
+        │   └── temperature_2024-08-13.png
+        ├── index.html
+        └── index.html~
+
+5 directories, 20 files
+#+end_example
+
+Puede usar Emacs para la creación de la estructura de su proyecto
+usando comandos desde el bloque de shell. Recuerde ejecutar el bloque
+con ~C-c C-c~. Para insertar un bloque nuevo utilice ~C-c C-,~ o ~M-x
+org-insert-structure-template~. Seleccione la opción /s/ para src y
+adapte el bloque según su código tenga un comandos de shell, código de
+Python o de Java. En este documento ~.org~ dispone de varios ejemplos
+funcionales para escribir y presentar el código.
+
+#+begin_src shell :results output :exports both
+cd proyecto
+pwd
+mkdir weather-site
+cd weather-site
+pwd
+ls
+mkdir content
+mkdir public
+echo 'Comandos Realizados'
+#+end_src
+
+#+RESULTS:
+: /home/sebastianmorales/proyecto
+: /home/sebastianmorales/proyecto/weather-site
+: build-site.el
+: build.sh
+: content
+: public
+: Comandos Realizados
+
+** Formulación del Problema
+Se desea realizar un registro climatológico de una ciudad
+$\mathcal{C}$. Para esto, escriba un script de Python/Java que permita
+obtener datos climatológicos desde el API de [[https://openweathermap.org/current#one][openweathermap]]. El API
+hace uso de los valores de latitud $x$ y longitud $y$ de la ciudad
+$\mathcal{C}$ para devolver los valores actuales a un tiempo $t$.
+
+Los resultados obtenidos de la consulta al API se escriben en un
+archivo /clima-<ciudad>-hoy.csv/. Cada ejecución del script debe
+almacenar nuevos datos en el archivo. Utilice *crontab* y sus
+conocimientos de Linux y Programación para obtener datos del API de
+/openweathermap/ con una periodicidad de 15 minutos mediante la
+ejecución de un archivo ejecutable denominado
+/get-weather.sh/. Obtenga al menos 50 datos. Verifique los
+resultados. Todas las operaciones se realizan en Linux o en el
+WSL. Las etapas del problema se subdividen en:
+
+    1. Conformar los grupos de 2 estudiantes y definir la ciudad
+       objeto de estudio.
+    2.  Crear su API gratuito en [[https://openweathermap.org/current#one][openweathermap]]
+    3. Escribir un script en Python/Java que realice la consulta al
+       API y escriba los resultados en /clima-<ciudad>-hoy.csv/. El
+       archivo ha de contener toda la información que se obtiene del
+       API en columnas. Se debe observar que los datos sobre lluvia
+       (rain) y nieve (snow) se dan a veces si existe el fenómeno.
+    3. Desarrollar un ejecutable /get-weather.sh/ para ejecutar el
+       programa Python/Java.[fn:1]
+       #+begin_src shell :exports both
+         
+       #+end_src
+    4. Configurar Crontab para la adquisición de datos. Escriba el
+       comando configurado. Respalde la ejecución de crontab en un
+       archivo output.log
+    5. Realizar la presentación del Trabajo utilizando la generación
+       del sitio web por medio de Emacs. Para esto es necesario crear
+       la carpeta **weather-site** dentro del proyecto. Puede ajustar el
+       /look and feel/ según sus preferencias. El servidor a usar es
+       el **simple-httpd** integrado en Emacs que debe ser instalado:
+       - Usando comandos Emacs: ~M-x package-install~ presionamos
+         enter (i.e. RET) y escribimos el nombre del paquete:
+         simple-httpd
+       - Configurando el archivo init.el
+
+       #+begin_src elisp
+         (use-package simple-httpd
+            :ensure t)
+       #+end_src
+
+       Instrucciones de sobre la creación del sitio web se tiene en el
+       vídeo de instrucciones y en el archivo [[https://github.com/LeninGF/EPN-Lectures/blob/main/iccd332ArqComp-2024-A/Tutoriales/Org-Website/Org-Website.org][Org-Website.org]] en el
+       GitHub del curso
+
+    6. Su código debe estar respaldado en GitHub/BitBucket, la
+       dirección será remitida en la contestación de la tarea
+** Descripción del código
+En esta sección se debe detallar segmentos importantes del código
+desarrollado así como la **estrategia de solución** adoptada por el
+grupo para resolver el problema. Divida su código en unidades
+funcionales para facilitar su presentación y exposición.
+
+Obtener datos del clima: 
+#+begin_src python :session :results output exports both
+def obtener_datos_clima(ciudad):
+    """Obtiene los datos meteorológicos de una ciudad dada.
+
+    Args:
+        ciudad (str): Nombre de la ciudad.
+
+    Returns:
+        dict: Un diccionario con los datos meteorológicos, o None en caso de error.
+    """
+    print(f"Obteniendo datos meteorológicos para {ciudad}...")
+    url_completa = URL_BASE + "appid=" + API_KEY + "&q=" + ciudad
+    respuesta = requests.get(url_completa)
+
+    if respuesta.status_code == 200:
+        print("Datos obtenidos exitosamente.")
+        return respuesta.json()
+    else:
+        print(f"Error al obtener datos meteorológicos para {ciudad}: {respuesta.status_code}")
+        return None
+#+end_src
+#+RESULTS:
+
+
+Guardar el archivo csv:
+#+begin_src python :session :results output exports both
+def guardar_en_csv(datos, ciudad):
+    """Guarda los datos meteorológicos en un archivo CSV.
+
+    Args:
+        datos (dict): Diccionario con los datos meteorológicos.
+        ciudad (str): Nombre de la ciudad.
+    """
+    if datos:
+        print("Guardando datos en CSV...")
+        # Extrae los datos relevantes del diccionario, incluyendo lluvia y nieve
+        temperatura = datos["main"]["temp"]
+        humedad = datos["main"]["humidity"]
+        descripcion = datos["weather"][0]["description"]
+        lluvia = datos.get("rain", {}).get("1h", 0)  # Maneja la ausencia de datos de lluvia
+        nieve = datos.get("snow", {}).get("1h", 0)  # Maneja la ausencia de datos de nieve
+
+        nombre_archivo = f"/home/sebastianmorales/proyecto/clima_{ciudad.lower()}_{datetime.date.today()}.csv"
+        with open(nombre_archivo, mode='a', newline='') as archivo:
+            escritor = csv.writer(archivo)
+            # Escribe el encabezado solo si el archivo está vacío
+            if archivo.tell() == 0:
+                escritor.writerow(["Fecha", "Ciudad", "Temperatura (K)", "Humedad (%)", "Descripción", "Lluvia (mm)", "Nieve (mm)"])
+            escritor.writerow([datetime.datetime.now(), ciudad, temperatura, humedad, descripcion, lluvia, nieve])
+        print("Datos guardados exitosamente.")
+    else:
+        print("No se pudieron guardar los datos.")
+#+end_src
+#+RESULTS:
+
+Try:
+#+begin_src python :session :results output exports both
+try:
+    # Obtener los datos meteorológicos
+    print("Iniciando obtención de datos...")
+    datos_clima = obtener_datos_clima(CIUDAD)
+    # Guardar los datos en un archivo CSV
+    guardar_en_csv(datos_clima, CIUDAD)
+    print("Proceso completado.")
+except Exception as e:
+    print(f"Se produjo un error: {e}")
+#+end_src
+#+RESULTS:
+: Iniciando obtención de datos...
+
+** Script ejecutable sh
+Se coloca el contenido del script ejecutable. Recuerde que se debe
+utilizar el entorno de **anaconda/mamba** denominado **iccd332** para
+la ejecución de Python; independientemente de que tenga una
+instalación nativa de Python
+
+En el caso de los shell script se puede usar `which sh` para conocer
+la ubicación del ejecutable
+#+begin_src shell :results output :exports both
+which sh
+#+end_src
+
+#+RESULTS:
+: /usr/bin/sh
+
+De igual manera se requiere localizar el entorno de mamba *iccd332*
+que será utilizado
+
+#+begin_src shell :results output :exports both
+which mamba
+#+end_src
+
+#+RESULTS:
+: /home/sebastianmorales/miniforge3/bin/mamba
+
+Con esto el archivo ejecutable a de tener (adapte el código según las
+condiciones de su máquina):
+
+#+begin_src shell :results output :exports both
+#!/usr/bin/sh
+source /home/sebastianmorales/miniforge3/etc/profile.d/conda.sh
+eval "$(conda shell.bash hook)"
+conda activate iccd332
+python main.py
+#+end_src
+
+#+RESULTS:
+
+Finalmente convierta en ejecutable como se explicó en clases y laboratorio
+#+begin_src shell :results output :exports both
+#!/usr/bin/sh
+chmod +x get-weather.sh
+#+end_src
+
+#+RESULTS:
+
+** Configuración de Crontab
+Se indica la configuración realizada en crontab para la adquisición de datos
+
+#+begin_src shell
+*/10 * * * * /home/sebastianmorales/proyecto/get-weather.sh >> /home/sebastianmorales/proyecto/output.log 2>&1
+#+end_src
+
+* Presentación de resultados
+Para la pressentación de resultados se utilizan las librerías de Python:
+- matplotlib
+- pandas
+
+Alternativamente como pudo estudiar en el Jupyter Notebook
+[[https://github.com/LeninGF/EPN-Lectures/blob/main/iccd332ArqComp-2024-A/Proyectos/CityWeather/CityTemperatureAnalysis.ipynb][CityTemperatureAnalysis.ipynb]], existen librerías alternativas que se
+pueden utilizar para presentar los resultados gráficos. En ambos
+casos, para que funcione los siguientes bloques de código, es
+necesario que realice la instalación de los paquetes usando ~mamba
+install <nombre-paquete>~
+** Muestra Aleatoria de datos
+Presentar una muestra de 10 valores aleatorios de los datos obtenidos.
+
+#+caption: Lectura de archivo csv
+#+begin_src python :session :results output exports both
+import os
+import pandas as pd
+# lectura del archivo csv obtenido
+df = pd.read_csv('/home/sebastianmorales/proyecto/clima_bogota_2024-08-13.csv')
+# se imprime la estructura del dataframe en forma de filas x columnas
+print(df.shape)
+#+end_src
+
+#+RESULTS:
+: (19, 7)
+Resultado del número de filas y columnas leídos del archivo csv
+
+#+caption: Despliegue de datos aleatorios
+#+begin_src python :session :exports both :results value table
+import pandas as pd
+
+# Asegúrate de que el DataFrame 'df' esté definido
+df = pd.read_csv('/home/sebastianmorales/proyecto/clima_bogota_2024-08-13.csv')
+
+# Selecciona 10 filas aleatorias del DataFrame
+table1 = df.sample(10)
+
+# Convierte el DataFrame a una lista de listas para su despliegue
+def create_table(dataframe):
+    return [dataframe.columns.tolist()] + dataframe.values.tolist()
+
+table = create_table(table1)
+table
+#+end_src
+
+#+RESULTS:
+| Fecha                      | Ciudad | Temperatura (K) | Humedad (%) | Descripción   | Lluvia (mm) | Nieve (mm) |
+| 30:02.4                    | Bogota |          288.88 |          59 | few clouds    |           0 |          0 |
+| 20:01.9                    | Bogota |          288.88 |          59 | few clouds    |           0 |          0 |
+| 2024-08-13 20:40:02.704692 | Bogota |          287.88 |          67 | broken clouds |           0 |          0 |
+| 2024-08-13 21:30:02.671536 | Bogota |          287.88 |          67 | broken clouds |           0 |          0 |
+| 2024-08-13 21:40:02.212171 | Bogota |          287.88 |          67 | broken clouds |           0 |          0 |
+| 00:02.4                    | Bogota |          288.88 |          59 | few clouds    |           0 |          0 |
+| 30:01.8                    | Bogota |          290.88 |          52 | few clouds    |           0 |          0 |
+| 2024-08-13 21:10:02.611752 | Bogota |          287.88 |          67 | broken clouds |           0 |          0 |
+| 2024-08-13 21:20:02.681432 | Bogota |          287.88 |          67 | broken clouds |           0 |          0 |
+| 2024-08-13 21:00:02.641782 | Bogota |          287.88 |          67 | broken clouds |           0 |          0 |
+
+** Gráfica Temperatura vs Tiempo
+Realizar una gráfica de la Temperatura en el tiempo.
+
+
+El siguiente cógido permite hacer la gráfica de la temperatura vs
+tiempo para Org 9.7+. Para saber que versión dispone puede ejecutar
+~M-x org-version~
+
+#+begin_src python :results file :exports both :session
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import datetime
+
+# Leer el archivo CSV
+fecha_actual = datetime.date.today()
+nombre_archivo = f"/home/sebastianmorales/proyecto/clima_bogota_{fecha_actual}.csv"
+
+# Leer el CSV
+df = pd.read_csv(nombre_archivo, parse_dates=['Fecha'])
+
+# Configurar la gráfica
+fig = plt.figure(figsize=(12, 6))
+plt.plot(df['Fecha'], df['Temperatura (K)'])
+
+# Ajustar la presentación de fechas en la imagen
+plt.gca().xaxis.set_major_locator(mdates.HourLocator(interval=1))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M'))
+
+plt.grid()
+plt.title(f'Temperatura vs Tiempo en {df.Ciudad.iloc[0]}')
+plt.xlabel('Fecha y Hora')
+plt.ylabel('Temperatura (K)')
+plt.xticks(rotation=40)
+fig.tight_layout()
+
+# Guardar la figura
+fname = f'/home/sebastianmorales/proyecto/weather-site/content/images/temperature_{fecha_actual}.png'
+plt.savefig(fname)
+plt.close()
+
+# Devolver solo la ruta del archivo
+print(f"[[file:{fname}]]")
+#+end_src
+
+# #+RESULTS:
+# [[file:(array([-1.04166667, -1.        , -0.95833333, -0.91666667, -0.875     ,
+#        -0.83333333, -0.79166667, -0.75      , -0.70833333, -0.66666667,
+#        -0.625     , -0.58333333, -0.54166667, -0.5       , -0.45833333,
+#        -0.41666667, -0.375     , -0.33333333, -0.29166667, -0.25      ,
+#        -0.20833333, -0.16666667, -0.125     , -0.08333333, -0.04166667,
+#         0.        ,  0.04166667,  0.08333333,  0.125     ,  0.16666667,
+#         0.20833333,  0.25      ,  0.29166667,  0.33333333,  0.375     ,
+#         0.41666667,  0.45833333,  0.5       ,  0.54166667,  0.58333333,
+#         0.625     ,  0.66666667,  0.70833333,  0.75      ,  0.79166667,
+#         0.83333333,  0.875     ,  0.91666667,  0.95833333,  1.        ,
+#         1.04166667,  1.08333333,  1.125     ,  1.16666667,  1.20833333,
+#         1.25      ,  1.29166667,  1.33333333,  1.375     ,  1.41666667,
+#         1.45833333,  1.5       ,  1.54166667,  1.58333333,  1.625     ,
+#         1.66666667,  1.70833333,  1.75      ,  1.79166667,  1.83333333,
+#         1.875     ,  1.91666667,  1.95833333,  2.        ,  2.04166667,
+#         2.08333333,  2.125     ,  2.16666667,  2.20833333,  2.25      ,
+#         2.29166667,  2.33333333,  2.375     ,  2.41666667,  2.45833333,
+#         2.5       ,  2.54166667,  2.58333333,  2.625     ,  2.66666667,
+#         2.70833333,  2.75      ,  2.79166667,  2.83333333,  2.875     ,
+#         2.91666667,  2.95833333,  3.        ,  3.04166667,  3.08333333,
+#         3.125     ,  3.16666667,  3.20833333,  3.25      ,  3.29166667,
+#         3.33333333,  3.375     ,  3.41666667,  3.45833333,  3.5       ,
+#         3.54166667,  3.58333333,  3.625     ,  3.66666667,  3.70833333,
+#         3.75      ,  3.79166667,  3.83333333,  3.875     ,  3.91666667,
+#         3.95833333,  4.        ,  4.04166667,  4.08333333,  4.125     ,
+#         4.16666667,  4.20833333,  4.25      ,  4.29166667,  4.33333333,
+#         4.375     ,  4.41666667,  4.45833333,  4.5       ,  4.54166667,
+#         4.58333333,  4.625     ,  4.66666667,  4.70833333,  4.75      ,
+#         4.79166667,  4.83333333,  4.875     ,  4.91666667,  4.95833333,
+#         5.        ,  5.04166667,  5.08333333,  5.125     ,  5.16666667,
+#         5.20833333,  5.25      ,  5.29166667,  5.33333333,  5.375     ,
+#         5.41666667,  5.45833333,  5.5       ,  5.54166667,  5.58333333,
+#         5.625     ,  5.66666667,  5.70833333,  5.75      ,  5.79166667,
+#         5.83333333,  5.875     ,  5.91666667,  5.95833333,  6.        ,
+#         6.04166667,  6.08333333,  6.125     ,  6.16666667,  6.20833333,
+#         6.25      ,  6.29166667,  6.33333333,  6.375     ,  6.41666667,
+#         6.45833333,  6.5       ,  6.54166667,  6.58333333,  6.625     ,
+#         6.66666667,  6.70833333,  6.75      ,  6.79166667,  6.83333333,
+#         6.875     ,  6.91666667,  6.95833333,  7.        ,  7.04166667,
+#         7.08333333,  7.125     ,  7.16666667,  7.20833333,  7.25      ,
+#         7.29166667,  7.33333333,  7.375     ,  7.41666667,  7.45833333,
+#         7.5       ,  7.54166667,  7.58333333,  7.625     ,  7.66666667,
+#         7.70833333,  7.75      ,  7.79166667,  7.83333333,  7.875     ,
+#         7.91666667,  7.95833333,  8.        ,  8.04166667,  8.08333333,
+#         8.125     ,  8.16666667,  8.20833333,  8.25      ,  8.29166667,
+#         8.33333333,  8.375     ,  8.41666667,  8.45833333,  8.5       ,
+#         8.54166667,  8.58333333,  8.625     ,  8.66666667,  8.70833333,
+#         8.75      ,  8.79166667,  8.83333333,  8.875     ,  8.91666667,
+#         8.95833333,  9.        ,  9.04166667,  9.08333333,  9.125     ,
+#         9.16666667,  9.20833333,  9.25      ,  9.29166667,  9.33333333,
+#         9.375     ,  9.41666667,  9.45833333,  9.5       ,  9.54166667,
+#         9.58333333,  9.625     ,  9.66666667,  9.70833333,  9.75      ,
+#         9.79166667,  9.83333333,  9.875     ,  9.91666667,  9.95833333,
+#        10.        , 10.04166667, 10.08333333, 10.125     , 10.16666667,
+#        10.20833333, 10.25      , 10.29166667, 10.33333333, 10.375     ,
+#        10.41666667, 10.45833333, 10.5       , 10.54166667, 10.58333333,
+#        10.625     , 10.66666667, 10.70833333, 10.75      , 10.79166667,
+#        10.83333333, 10.875     , 10.91666667, 10.95833333, 11.        ,
+#        11.04166667, 11.08333333, 11.125     , 11.16666667, 11.20833333,
+#        11.25      , 11.29166667, 11.33333333, 11.375     , 11.41666667,
+#        11.45833333, 11.5       , 11.54166667, 11.58333333, 11.625     ,
+#        11.66666667, 11.70833333, 11.75      , 11.79166667, 11.83333333,
+#        11.875     , 11.91666667, 11.95833333, 12.        , 12.04166667,
+#        12.08333333, 12.125     , 12.16666667, 12.20833333, 12.25      ,
+#        12.29166667, 12.33333333, 12.375     , 12.41666667, 12.45833333,
+#        12.5       , 12.54166667, 12.58333333, 12.625     , 12.66666667,
+#        12.70833333, 12.75      , 12.79166667, 12.83333333, 12.875     ,
+#        12.91666667, 12.95833333, 13.        , 13.04166667, 13.08333333,
+#        13.125     , 13.16666667, 13.20833333, 13.25      , 13.29166667,
+#        13.33333333, 13.375     , 13.41666667, 13.45833333, 13.5       ,
+#        13.54166667, 13.58333333, 13.625     , 13.66666667, 13.70833333,
+#        13.75      , 13.79166667, 13.83333333, 13.875     , 13.91666667,
+#        13.95833333, 14.        , 14.04166667, 14.08333333, 14.125     ,
+#        14.16666667, 14.20833333, 14.25      , 14.29166667, 14.33333333,
+#        14.375     , 14.41666667, 14.45833333, 14.5       , 14.54166667,
+#        14.58333333, 14.625     , 14.66666667, 14.70833333, 14.75      ,
+#        14.79166667, 14.83333333, 14.875     , 14.91666667, 14.95833333,
+#        15.        , 15.04166667, 15.08333333, 15.125     , 15.16666667,
+#        15.20833333, 15.25      , 15.29166667, 15.33333333, 15.375     ,
+#        15.41666667, 15.45833333, 15.5       , 15.54166667, 15.58333333,
+#        15.625     , 15.66666667, 15.70833333, 15.75      , 15.79166667,
+#        15.83333333, 15.875     , 15.91666667, 15.95833333, 16.        ,
+#        16.04166667, 16.08333333, 16.125     , 16.16666667, 16.20833333,
+#        16.25      , 16.29166667, 16.33333333, 16.375     , 16.41666667,
+#        16.45833333, 16.5       , 16.54166667, 16.58333333, 16.625     ,
+#        16.66666667, 16.70833333, 16.75      , 16.79166667, 16.83333333,
+#        16.875     , 16.91666667, 16.95833333, 17.        , 17.04166667,
+#        17.08333333, 17.125     , 17.16666667, 17.20833333, 17.25      ,
+#        17.29166667, 17.33333333, 17.375     , 17.41666667, 17.45833333,
+#        17.5       , 17.54166667, 17.58333333, 17.625     , 17.66666667,
+#        17.70833333, 17.75      , 17.79166667, 17.83333333, 17.875     ,
+#        17.91666667, 17.95833333, 18.        , 18.04166667, 18.08333333,
+#        18.125     , 18.16666667, 18.20833333, 18.25      , 18.29166667,
+#        18.33333333, 18.375     , 18.41666667, 18.45833333, 18.5       ,
+#        18.54166667, 18.58333333, 18.625     , 18.66666667, 18.70833333,
+#        18.75      , 18.79166667, 18.83333333, 18.875     , 18.91666667,
+#        18.95833333, 19.        , 19.04166667, 19.08333333, 19.125     ,
+#        19.16666667, 19.20833333, 19.25      , 19.29166667, 19.33333333,
+#        19.375     , 19.41666667, 19.45833333, 19.5       , 19.54166667,
+#        19.58333333, 19.625     , 19.66666667, 19.70833333, 19.75      ,
+#        19.79166667, 19.83333333, 19.875     , 19.91666667, 19.95833333,
+#        20.        , 20.04166667, 20.08333333, 20.125     , 20.16666667,
+#        20.20833333, 20.25      , 20.29166667, 20.33333333, 20.375     ,
+#        20.41666667, 20.45833333, 20.5       , 20.54166667, 20.58333333,
+#        20.625     , 20.66666667, 20.70833333, 20.75      , 20.79166667,
+#        20.83333333, 20.875     , 20.91666667, 20.95833333, 21.        ,
+#        21.04166667, 21.08333333, 21.125     , 21.16666667, 21.20833333,
+#        21.25      , 21.29166667, 21.33333333, 21.375     , 21.41666667,
+#        21.45833333, 21.5       , 21.54166667, 21.58333333, 21.625     ,
+#        21.66666667, 21.70833333, 21.75      , 21.79166667, 21.83333333,
+#        21.875     , 21.91666667, 21.95833333, 22.        , 22.04166667]), [Text(-1.0416666666666667, 0, '1969-12-30 23:00'), Text(-1.0, 0, '1969-12-31 00:00'), Text(-0.9583333333333334, 0, '1969-12-31 01:00'), Text(-0.9166666666666666, 0, '1969-12-31 02:00'), Text(-0.875, 0, '1969-12-31 03:00'), Text(-0.8333333333333334, 0, '1969-12-31 04:00'), Text(-0.7916666666666666, 0, '1969-12-31 05:00'), Text(-0.75, 0, '1969-12-31 06:00'), Text(-0.7083333333333334, 0, '1969-12-31 07:00'), Text(-0.6666666666666666, 0, '1969-12-31 08:00'), Text(-0.625, 0, '1969-12-31 09:00'), Text(-0.5833333333333334, 0, '1969-12-31 10:00'), Text(-0.5416666666666666, 0, '1969-12-31 11:00'), Text(-0.5, 0, '1969-12-31 12:00'), Text(-0.4583333333333333, 0, '1969-12-31 13:00'), Text(-0.4166666666666667, 0, '1969-12-31 14:00'), Text(-0.375, 0, '1969-12-31 15:00'), Text(-0.3333333333333333, 0, '1969-12-31 16:00'), Text(-0.2916666666666667, 0, '1969-12-31 17:00'), Text(-0.25, 0, '1969-12-31 18:00'), Text(-0.20833333333333334, 0, '1969-12-31 19:00'), Text(-0.16666666666666666, 0, '1969-12-31 20:00'), Text(-0.125, 0, '1969-12-31 21:00'), Text(-0.08333333333333333, 0, '1969-12-31 22:00'), Text(-0.041666666666666664, 0, '1969-12-31 23:00'), Text(0.0, 0, '1970-01-01 00:00'), Text(0.041666666666666664, 0, '1970-01-01 01:00'), Text(0.08333333333333333, 0, '1970-01-01 02:00'), Text(0.125, 0, '1970-01-01 03:00'), Text(0.16666666666666666, 0, '1970-01-01 04:00'), Text(0.20833333333333334, 0, '1970-01-01 05:00'), Text(0.25, 0, '1970-01-01 06:00'), Text(0.2916666666666667, 0, '1970-01-01 07:00'), Text(0.3333333333333333, 0, '1970-01-01 08:00'), Text(0.375, 0, '1970-01-01 09:00'), Text(0.4166666666666667, 0, '1970-01-01 10:00'), Text(0.4583333333333333, 0, '1970-01-01 11:00'), Text(0.5, 0, '1970-01-01 12:00'), Text(0.5416666666666666, 0, '1970-01-01 13:00'), Text(0.5833333333333334, 0, '1970-01-01 14:00'), Text(0.625, 0, '1970-01-01 15:00'), Text(0.6666666666666666, 0, '1970-01-01 16:00'), Text(0.7083333333333334, 0, '1970-01-01 17:00'), Text(0.75, 0, '1970-01-01 18:00'), Text(0.7916666666666666, 0, '1970-01-01 19:00'), Text(0.8333333333333334, 0, '1970-01-01 20:00'), Text(0.875, 0, '1970-01-01 21:00'), Text(0.9166666666666666, 0, '1970-01-01 22:00'), Text(0.9583333333333334, 0, '1970-01-01 23:00'), Text(1.0, 0, '1970-01-02 00:00'), Text(1.0416666666666667, 0, '1970-01-02 01:00'), Text(1.0833333333333333, 0, '1970-01-02 02:00'), Text(1.125, 0, '1970-01-02 03:00'), Text(1.1666666666666667, 0, '1970-01-02 04:00'), Text(1.2083333333333333, 0, '1970-01-02 05:00'), Text(1.25, 0, '1970-01-02 06:00'), Text(1.2916666666666667, 0, '1970-01-02 07:00'), Text(1.3333333333333333, 0, '1970-01-02 08:00'), Text(1.375, 0, '1970-01-02 09:00'), Text(1.4166666666666667, 0, '1970-01-02 10:00'), Text(1.4583333333333333, 0, '1970-01-02 11:00'), Text(1.5, 0, '1970-01-02 12:00'), Text(1.5416666666666667, 0, '1970-01-02 13:00'), Text(1.5833333333333333, 0, '1970-01-02 14:00'), Text(1.625, 0, '1970-01-02 15:00'), Text(1.6666666666666667, 0, '1970-01-02 16:00'), Text(1.7083333333333333, 0, '1970-01-02 17:00'), Text(1.75, 0, '1970-01-02 18:00'), Text(1.7916666666666667, 0, '1970-01-02 19:00'), Text(1.8333333333333333, 0, '1970-01-02 20:00'), Text(1.875, 0, '1970-01-02 21:00'), Text(1.9166666666666667, 0, '1970-01-02 22:00'), Text(1.9583333333333333, 0, '1970-01-02 23:00'), Text(2.0, 0, '1970-01-03 00:00'), Text(2.0416666666666665, 0, '1970-01-03 01:00'), Text(2.0833333333333335, 0, '1970-01-03 02:00'), Text(2.125, 0, '1970-01-03 03:00'), Text(2.1666666666666665, 0, '1970-01-03 04:00'), Text(2.2083333333333335, 0, '1970-01-03 05:00'), Text(2.25, 0, '1970-01-03 06:00'), Text(2.2916666666666665, 0, '1970-01-03 07:00'), Text(2.3333333333333335, 0, '1970-01-03 08:00'), Text(2.375, 0, '1970-01-03 09:00'), Text(2.4166666666666665, 0, '1970-01-03 10:00'), Text(2.4583333333333335, 0, '1970-01-03 11:00'), Text(2.5, 0, '1970-01-03 12:00'), Text(2.5416666666666665, 0, '1970-01-03 13:00'), Text(2.5833333333333335, 0, '1970-01-03 14:00'), Text(2.625, 0, '1970-01-03 15:00'), Text(2.6666666666666665, 0, '1970-01-03 16:00'), Text(2.7083333333333335, 0, '1970-01-03 17:00'), Text(2.75, 0, '1970-01-03 18:00'), Text(2.7916666666666665, 0, '1970-01-03 19:00'), Text(2.8333333333333335, 0, '1970-01-03 20:00'), Text(2.875, 0, '1970-01-03 21:00'), Text(2.9166666666666665, 0, '1970-01-03 22:00'), Text(2.9583333333333335, 0, '1970-01-03 23:00'), Text(3.0, 0, '1970-01-04 00:00'), Text(3.0416666666666665, 0, '1970-01-04 01:00'), Text(3.0833333333333335, 0, '1970-01-04 02:00'), Text(3.125, 0, '1970-01-04 03:00'), Text(3.1666666666666665, 0, '1970-01-04 04:00'), Text(3.2083333333333335, 0, '1970-01-04 05:00'), Text(3.25, 0, '1970-01-04 06:00'), Text(3.2916666666666665, 0, '1970-01-04 07:00'), Text(3.3333333333333335, 0, '1970-01-04 08:00'), Text(3.375, 0, '1970-01-04 09:00'), Text(3.4166666666666665, 0, '1970-01-04 10:00'), Text(3.4583333333333335, 0, '1970-01-04 11:00'), Text(3.5, 0, '1970-01-04 12:00'), Text(3.5416666666666665, 0, '1970-01-04 13:00'), Text(3.5833333333333335, 0, '1970-01-04 14:00'), Text(3.625, 0, '1970-01-04 15:00'), Text(3.6666666666666665, 0, '1970-01-04 16:00'), Text(3.7083333333333335, 0, '1970-01-04 17:00'), Text(3.75, 0, '1970-01-04 18:00'), Text(3.7916666666666665, 0, '1970-01-04 19:00'), Text(3.8333333333333335, 0, '1970-01-04 20:00'), Text(3.875, 0, '1970-01-04 21:00'), Text(3.9166666666666665, 0, '1970-01-04 22:00'), Text(3.9583333333333335, 0, '1970-01-04 23:00'), Text(4.0, 0, '1970-01-05 00:00'), Text(4.041666666666667, 0, '1970-01-05 01:00'), Text(4.083333333333333, 0, '1970-01-05 02:00'), Text(4.125, 0, '1970-01-05 03:00'), Text(4.166666666666667, 0, '1970-01-05 04:00'), Text(4.208333333333333, 0, '1970-01-05 05:00'), Text(4.25, 0, '1970-01-05 06:00'), Text(4.291666666666667, 0, '1970-01-05 07:00'), Text(4.333333333333333, 0, '1970-01-05 08:00'), Text(4.375, 0, '1970-01-05 09:00'), Text(4.416666666666667, 0, '1970-01-05 10:00'), Text(4.458333333333333, 0, '1970-01-05 11:00'), Text(4.5, 0, '1970-01-05 12:00'), Text(4.541666666666667, 0, '1970-01-05 13:00'), Text(4.583333333333333, 0, '1970-01-05 14:00'), Text(4.625, 0, '1970-01-05 15:00'), Text(4.666666666666667, 0, '1970-01-05 16:00'), Text(4.708333333333333, 0, '1970-01-05 17:00'), Text(4.75, 0, '1970-01-05 18:00'), Text(4.791666666666667, 0, '1970-01-05 19:00'), Text(4.833333333333333, 0, '1970-01-05 20:00'), Text(4.875, 0, '1970-01-05 21:00'), Text(4.916666666666667, 0, '1970-01-05 22:00'), Text(4.958333333333333, 0, '1970-01-05 23:00'), Text(5.0, 0, '1970-01-06 00:00'), Text(5.041666666666667, 0, '1970-01-06 01:00'), Text(5.083333333333333, 0, '1970-01-06 02:00'), Text(5.125, 0, '1970-01-06 03:00'), Text(5.166666666666667, 0, '1970-01-06 04:00'), Text(5.208333333333333, 0, '1970-01-06 05:00'), Text(5.25, 0, '1970-01-06 06:00'), Text(5.291666666666667, 0, '1970-01-06 07:00'), Text(5.333333333333333, 0, '1970-01-06 08:00'), Text(5.375, 0, '1970-01-06 09:00'), Text(5.416666666666667, 0, '1970-01-06 10:00'), Text(5.458333333333333, 0, '1970-01-06 11:00'), Text(5.5, 0, '1970-01-06 12:00'), Text(5.541666666666667, 0, '1970-01-06 13:00'), Text(5.583333333333333, 0, '1970-01-06 14:00'), Text(5.625, 0, '1970-01-06 15:00'), Text(5.666666666666667, 0, '1970-01-06 16:00'), Text(5.708333333333333, 0, '1970-01-06 17:00'), Text(5.75, 0, '1970-01-06 18:00'), Text(5.791666666666667, 0, '1970-01-06 19:00'), Text(5.833333333333333, 0, '1970-01-06 20:00'), Text(5.875, 0, '1970-01-06 21:00'), Text(5.916666666666667, 0, '1970-01-06 22:00'), Text(5.958333333333333, 0, '1970-01-06 23:00'), Text(6.0, 0, '1970-01-07 00:00'), Text(6.041666666666667, 0, '1970-01-07 01:00'), Text(6.083333333333333, 0, '1970-01-07 02:00'), Text(6.125, 0, '1970-01-07 03:00'), Text(6.166666666666667, 0, '1970-01-07 04:00'), Text(6.208333333333333, 0, '1970-01-07 05:00'), Text(6.25, 0, '1970-01-07 06:00'), Text(6.291666666666667, 0, '1970-01-07 07:00'), Text(6.333333333333333, 0, '1970-01-07 08:00'), Text(6.375, 0, '1970-01-07 09:00'), Text(6.416666666666667, 0, '1970-01-07 10:00'), Text(6.458333333333333, 0, '1970-01-07 11:00'), Text(6.5, 0, '1970-01-07 12:00'), Text(6.541666666666667, 0, '1970-01-07 13:00'), Text(6.583333333333333, 0, '1970-01-07 14:00'), Text(6.625, 0, '1970-01-07 15:00'), Text(6.666666666666667, 0, '1970-01-07 16:00'), Text(6.708333333333333, 0, '1970-01-07 17:00'), Text(6.75, 0, '1970-01-07 18:00'), Text(6.791666666666667, 0, '1970-01-07 19:00'), Text(6.833333333333333, 0, '1970-01-07 20:00'), Text(6.875, 0, '1970-01-07 21:00'), Text(6.916666666666667, 0, '1970-01-07 22:00'), Text(6.958333333333333, 0, '1970-01-07 23:00'), Text(7.0, 0, '1970-01-08 00:00'), Text(7.041666666666667, 0, '1970-01-08 01:00'), Text(7.083333333333333, 0, '1970-01-08 02:00'), Text(7.125, 0, '1970-01-08 03:00'), Text(7.166666666666667, 0, '1970-01-08 04:00'), Text(7.208333333333333, 0, '1970-01-08 05:00'), Text(7.25, 0, '1970-01-08 06:00'), Text(7.291666666666667, 0, '1970-01-08 07:00'), Text(7.333333333333333, 0, '1970-01-08 08:00'), Text(7.375, 0, '1970-01-08 09:00'), Text(7.416666666666667, 0, '1970-01-08 10:00'), Text(7.458333333333333, 0, '1970-01-08 11:00'), Text(7.5, 0, '1970-01-08 12:00'), Text(7.541666666666667, 0, '1970-01-08 13:00'), Text(7.583333333333333, 0, '1970-01-08 14:00'), Text(7.625, 0, '1970-01-08 15:00'), Text(7.666666666666667, 0, '1970-01-08 16:00'), Text(7.708333333333333, 0, '1970-01-08 17:00'), Text(7.75, 0, '1970-01-08 18:00'), Text(7.791666666666667, 0, '1970-01-08 19:00'), Text(7.833333333333333, 0, '1970-01-08 20:00'), Text(7.875, 0, '1970-01-08 21:00'), Text(7.916666666666667, 0, '1970-01-08 22:00'), Text(7.958333333333333, 0, '1970-01-08 23:00'), Text(8.0, 0, '1970-01-09 00:00'), Text(8.041666666666666, 0, '1970-01-09 01:00'), Text(8.083333333333334, 0, '1970-01-09 02:00'), Text(8.125, 0, '1970-01-09 03:00'), Text(8.166666666666666, 0, '1970-01-09 04:00'), Text(8.208333333333334, 0, '1970-01-09 05:00'), Text(8.25, 0, '1970-01-09 06:00'), Text(8.291666666666666, 0, '1970-01-09 07:00'), Text(8.333333333333334, 0, '1970-01-09 08:00'), Text(8.375, 0, '1970-01-09 09:00'), Text(8.416666666666666, 0, '1970-01-09 10:00'), Text(8.458333333333334, 0, '1970-01-09 11:00'), Text(8.5, 0, '1970-01-09 12:00'), Text(8.541666666666666, 0, '1970-01-09 13:00'), Text(8.583333333333334, 0, '1970-01-09 14:00'), Text(8.625, 0, '1970-01-09 15:00'), Text(8.666666666666666, 0, '1970-01-09 16:00'), Text(8.708333333333334, 0, '1970-01-09 17:00'), Text(8.75, 0, '1970-01-09 18:00'), Text(8.791666666666666, 0, '1970-01-09 19:00'), Text(8.833333333333334, 0, '1970-01-09 20:00'), Text(8.875, 0, '1970-01-09 21:00'), Text(8.916666666666666, 0, '1970-01-09 22:00'), Text(8.958333333333334, 0, '1970-01-09 23:00'), Text(9.0, 0, '1970-01-10 00:00'), Text(9.041666666666666, 0, '1970-01-10 01:00'), Text(9.083333333333334, 0, '1970-01-10 02:00'), Text(9.125, 0, '1970-01-10 03:00'), Text(9.166666666666666, 0, '1970-01-10 04:00'), Text(9.208333333333334, 0, '1970-01-10 05:00'), Text(9.25, 0, '1970-01-10 06:00'), Text(9.291666666666666, 0, '1970-01-10 07:00'), Text(9.333333333333334, 0, '1970-01-10 08:00'), Text(9.375, 0, '1970-01-10 09:00'), Text(9.416666666666666, 0, '1970-01-10 10:00'), Text(9.458333333333334, 0, '1970-01-10 11:00'), Text(9.5, 0, '1970-01-10 12:00'), Text(9.541666666666666, 0, '1970-01-10 13:00'), Text(9.583333333333334, 0, '1970-01-10 14:00'), Text(9.625, 0, '1970-01-10 15:00'), Text(9.666666666666666, 0, '1970-01-10 16:00'), Text(9.708333333333334, 0, '1970-01-10 17:00'), Text(9.75, 0, '1970-01-10 18:00'), Text(9.791666666666666, 0, '1970-01-10 19:00'), Text(9.833333333333334, 0, '1970-01-10 20:00'), Text(9.875, 0, '1970-01-10 21:00'), Text(9.916666666666666, 0, '1970-01-10 22:00'), Text(9.958333333333334, 0, '1970-01-10 23:00'), Text(10.0, 0, '1970-01-11 00:00'), Text(10.041666666666666, 0, '1970-01-11 01:00'), Text(10.083333333333334, 0, '1970-01-11 02:00'), Text(10.125, 0, '1970-01-11 03:00'), Text(10.166666666666666, 0, '1970-01-11 04:00'), Text(10.208333333333334, 0, '1970-01-11 05:00'), Text(10.25, 0, '1970-01-11 06:00'), Text(10.291666666666666, 0, '1970-01-11 07:00'), Text(10.333333333333334, 0, '1970-01-11 08:00'), Text(10.375, 0, '1970-01-11 09:00'), Text(10.416666666666666, 0, '1970-01-11 10:00'), Text(10.458333333333334, 0, '1970-01-11 11:00'), Text(10.5, 0, '1970-01-11 12:00'), Text(10.541666666666666, 0, '1970-01-11 13:00'), Text(10.583333333333334, 0, '1970-01-11 14:00'), Text(10.625, 0, '1970-01-11 15:00'), Text(10.666666666666666, 0, '1970-01-11 16:00'), Text(10.708333333333334, 0, '1970-01-11 17:00'), Text(10.75, 0, '1970-01-11 18:00'), Text(10.791666666666666, 0, '1970-01-11 19:00'), Text(10.833333333333334, 0, '1970-01-11 20:00'), Text(10.875, 0, '1970-01-11 21:00'), Text(10.916666666666666, 0, '1970-01-11 22:00'), Text(10.958333333333334, 0, '1970-01-11 23:00'), Text(11.0, 0, '1970-01-12 00:00'), Text(11.041666666666666, 0, '1970-01-12 01:00'), Text(11.083333333333334, 0, '1970-01-12 02:00'), Text(11.125, 0, '1970-01-12 03:00'), Text(11.166666666666666, 0, '1970-01-12 04:00'), Text(11.208333333333334, 0, '1970-01-12 05:00'), Text(11.25, 0, '1970-01-12 06:00'), Text(11.291666666666666, 0, '1970-01-12 07:00'), Text(11.333333333333334, 0, '1970-01-12 08:00'), Text(11.375, 0, '1970-01-12 09:00'), Text(11.416666666666666, 0, '1970-01-12 10:00'), Text(11.458333333333334, 0, '1970-01-12 11:00'), Text(11.5, 0, '1970-01-12 12:00'), Text(11.541666666666666, 0, '1970-01-12 13:00'), Text(11.583333333333334, 0, '1970-01-12 14:00'), Text(11.625, 0, '1970-01-12 15:00'), Text(11.666666666666666, 0, '1970-01-12 16:00'), Text(11.708333333333334, 0, '1970-01-12 17:00'), Text(11.75, 0, '1970-01-12 18:00'), Text(11.791666666666666, 0, '1970-01-12 19:00'), Text(11.833333333333334, 0, '1970-01-12 20:00'), Text(11.875, 0, '1970-01-12 21:00'), Text(11.916666666666666, 0, '1970-01-12 22:00'), Text(11.958333333333334, 0, '1970-01-12 23:00'), Text(12.0, 0, '1970-01-13 00:00'), Text(12.041666666666666, 0, '1970-01-13 01:00'), Text(12.083333333333334, 0, '1970-01-13 02:00'), Text(12.125, 0, '1970-01-13 03:00'), Text(12.166666666666666, 0, '1970-01-13 04:00'), Text(12.208333333333334, 0, '1970-01-13 05:00'), Text(12.25, 0, '1970-01-13 06:00'), Text(12.291666666666666, 0, '1970-01-13 07:00'), Text(12.333333333333334, 0, '1970-01-13 08:00'), Text(12.375, 0, '1970-01-13 09:00'), Text(12.416666666666666, 0, '1970-01-13 10:00'), Text(12.458333333333334, 0, '1970-01-13 11:00'), Text(12.5, 0, '1970-01-13 12:00'), Text(12.541666666666666, 0, '1970-01-13 13:00'), Text(12.583333333333334, 0, '1970-01-13 14:00'), Text(12.625, 0, '1970-01-13 15:00'), Text(12.666666666666666, 0, '1970-01-13 16:00'), Text(12.708333333333334, 0, '1970-01-13 17:00'), Text(12.75, 0, '1970-01-13 18:00'), Text(12.791666666666666, 0, '1970-01-13 19:00'), Text(12.833333333333334, 0, '1970-01-13 20:00'), Text(12.875, 0, '1970-01-13 21:00'), Text(12.916666666666666, 0, '1970-01-13 22:00'), Text(12.958333333333334, 0, '1970-01-13 23:00'), Text(13.0, 0, '1970-01-14 00:00'), Text(13.041666666666666, 0, '1970-01-14 01:00'), Text(13.083333333333334, 0, '1970-01-14 02:00'), Text(13.125, 0, '1970-01-14 03:00'), Text(13.166666666666666, 0, '1970-01-14 04:00'), Text(13.208333333333334, 0, '1970-01-14 05:00'), Text(13.25, 0, '1970-01-14 06:00'), Text(13.291666666666666, 0, '1970-01-14 07:00'), Text(13.333333333333334, 0, '1970-01-14 08:00'), Text(13.375, 0, '1970-01-14 09:00'), Text(13.416666666666666, 0, '1970-01-14 10:00'), Text(13.458333333333334, 0, '1970-01-14 11:00'), Text(13.5, 0, '1970-01-14 12:00'), Text(13.541666666666666, 0, '1970-01-14 13:00'), Text(13.583333333333334, 0, '1970-01-14 14:00'), Text(13.625, 0, '1970-01-14 15:00'), Text(13.666666666666666, 0, '1970-01-14 16:00'), Text(13.708333333333334, 0, '1970-01-14 17:00'), Text(13.75, 0, '1970-01-14 18:00'), Text(13.791666666666666, 0, '1970-01-14 19:00'), Text(13.833333333333334, 0, '1970-01-14 20:00'), Text(13.875, 0, '1970-01-14 21:00'), Text(13.916666666666666, 0, '1970-01-14 22:00'), Text(13.958333333333334, 0, '1970-01-14 23:00'), Text(14.0, 0, '1970-01-15 00:00'), Text(14.041666666666666, 0, '1970-01-15 01:00'), Text(14.083333333333334, 0, '1970-01-15 02:00'), Text(14.125, 0, '1970-01-15 03:00'), Text(14.166666666666666, 0, '1970-01-15 04:00'), Text(14.208333333333334, 0, '1970-01-15 05:00'), Text(14.25, 0, '1970-01-15 06:00'), Text(14.291666666666666, 0, '1970-01-15 07:00'), Text(14.333333333333334, 0, '1970-01-15 08:00'), Text(14.375, 0, '1970-01-15 09:00'), Text(14.416666666666666, 0, '1970-01-15 10:00'), Text(14.458333333333334, 0, '1970-01-15 11:00'), Text(14.5, 0, '1970-01-15 12:00'), Text(14.541666666666666, 0, '1970-01-15 13:00'), Text(14.583333333333334, 0, '1970-01-15 14:00'), Text(14.625, 0, '1970-01-15 15:00'), Text(14.666666666666666, 0, '1970-01-15 16:00'), Text(14.708333333333334, 0, '1970-01-15 17:00'), Text(14.75, 0, '1970-01-15 18:00'), Text(14.791666666666666, 0, '1970-01-15 19:00'), Text(14.833333333333334, 0, '1970-01-15 20:00'), Text(14.875, 0, '1970-01-15 21:00'), Text(14.916666666666666, 0, '1970-01-15 22:00'), Text(14.958333333333334, 0, '1970-01-15 23:00'), Text(15.0, 0, '1970-01-16 00:00'), Text(15.041666666666666, 0, '1970-01-16 01:00'), Text(15.083333333333334, 0, '1970-01-16 02:00'), Text(15.125, 0, '1970-01-16 03:00'), Text(15.166666666666666, 0, '1970-01-16 04:00'), Text(15.208333333333334, 0, '1970-01-16 05:00'), Text(15.25, 0, '1970-01-16 06:00'), Text(15.291666666666666, 0, '1970-01-16 07:00'), Text(15.333333333333334, 0, '1970-01-16 08:00'), Text(15.375, 0, '1970-01-16 09:00'), Text(15.416666666666666, 0, '1970-01-16 10:00'), Text(15.458333333333334, 0, '1970-01-16 11:00'), Text(15.5, 0, '1970-01-16 12:00'), Text(15.541666666666666, 0, '1970-01-16 13:00'), Text(15.583333333333334, 0, '1970-01-16 14:00'), Text(15.625, 0, '1970-01-16 15:00'), Text(15.666666666666666, 0, '1970-01-16 16:00'), Text(15.708333333333334, 0, '1970-01-16 17:00'), Text(15.75, 0, '1970-01-16 18:00'), Text(15.791666666666666, 0, '1970-01-16 19:00'), Text(15.833333333333334, 0, '1970-01-16 20:00'), Text(15.875, 0, '1970-01-16 21:00'), Text(15.916666666666666, 0, '1970-01-16 22:00'), Text(15.958333333333334, 0, '1970-01-16 23:00'), Text(16.0, 0, '1970-01-17 00:00'), Text(16.041666666666668, 0, '1970-01-17 01:00'), Text(16.083333333333332, 0, '1970-01-17 02:00'), Text(16.125, 0, '1970-01-17 03:00'), Text(16.166666666666668, 0, '1970-01-17 04:00'), Text(16.208333333333332, 0, '1970-01-17 05:00'), Text(16.25, 0, '1970-01-17 06:00'), Text(16.291666666666668, 0, '1970-01-17 07:00'), Text(16.333333333333332, 0, '1970-01-17 08:00'), Text(16.375, 0, '1970-01-17 09:00'), Text(16.416666666666668, 0, '1970-01-17 10:00'), Text(16.458333333333332, 0, '1970-01-17 11:00'), Text(16.5, 0, '1970-01-17 12:00'), Text(16.541666666666668, 0, '1970-01-17 13:00'), Text(16.583333333333332, 0, '1970-01-17 14:00'), Text(16.625, 0, '1970-01-17 15:00'), Text(16.666666666666668, 0, '1970-01-17 16:00'), Text(16.708333333333332, 0, '1970-01-17 17:00'), Text(16.75, 0, '1970-01-17 18:00'), Text(16.791666666666668, 0, '1970-01-17 19:00'), Text(16.833333333333332, 0, '1970-01-17 20:00'), Text(16.875, 0, '1970-01-17 21:00'), Text(16.916666666666668, 0, '1970-01-17 22:00'), Text(16.958333333333332, 0, '1970-01-17 23:00'), Text(17.0, 0, '1970-01-18 00:00'), Text(17.041666666666668, 0, '1970-01-18 01:00'), Text(17.083333333333332, 0, '1970-01-18 02:00'), Text(17.125, 0, '1970-01-18 03:00'), Text(17.166666666666668, 0, '1970-01-18 04:00'), Text(17.208333333333332, 0, '1970-01-18 05:00'), Text(17.25, 0, '1970-01-18 06:00'), Text(17.291666666666668, 0, '1970-01-18 07:00'), Text(17.333333333333332, 0, '1970-01-18 08:00'), Text(17.375, 0, '1970-01-18 09:00'), Text(17.416666666666668, 0, '1970-01-18 10:00'), Text(17.458333333333332, 0, '1970-01-18 11:00'), Text(17.5, 0, '1970-01-18 12:00'), Text(17.541666666666668, 0, '1970-01-18 13:00'), Text(17.583333333333332, 0, '1970-01-18 14:00'), Text(17.625, 0, '1970-01-18 15:00'), Text(17.666666666666668, 0, '1970-01-18 16:00'), Text(17.708333333333332, 0, '1970-01-18 17:00'), Text(17.75, 0, '1970-01-18 18:00'), Text(17.791666666666668, 0, '1970-01-18 19:00'), Text(17.833333333333332, 0, '1970-01-18 20:00'), Text(17.875, 0, '1970-01-18 21:00'), Text(17.916666666666668, 0, '1970-01-18 22:00'), Text(17.958333333333332, 0, '1970-01-18 23:00'), Text(18.0, 0, '1970-01-19 00:00'), Text(18.041666666666668, 0, '1970-01-19 01:00'), Text(18.083333333333332, 0, '1970-01-19 02:00'), Text(18.125, 0, '1970-01-19 03:00'), Text(18.166666666666668, 0, '1970-01-19 04:00'), Text(18.208333333333332, 0, '1970-01-19 05:00'), Text(18.25, 0, '1970-01-19 06:00'), Text(18.291666666666668, 0, '1970-01-19 07:00'), Text(18.333333333333332, 0, '1970-01-19 08:00'), Text(18.375, 0, '1970-01-19 09:00'), Text(18.416666666666668, 0, '1970-01-19 10:00'), Text(18.458333333333332, 0, '1970-01-19 11:00'), Text(18.5, 0, '1970-01-19 12:00'), Text(18.541666666666668, 0, '1970-01-19 13:00'), Text(18.583333333333332, 0, '1970-01-19 14:00'), Text(18.625, 0, '1970-01-19 15:00'), Text(18.666666666666668, 0, '1970-01-19 16:00'), Text(18.708333333333332, 0, '1970-01-19 17:00'), Text(18.75, 0, '1970-01-19 18:00'), Text(18.791666666666668, 0, '1970-01-19 19:00'), Text(18.833333333333332, 0, '1970-01-19 20:00'), Text(18.875, 0, '1970-01-19 21:00'), Text(18.916666666666668, 0, '1970-01-19 22:00'), Text(18.958333333333332, 0, '1970-01-19 23:00'), Text(19.0, 0, '1970-01-20 00:00'), Text(19.041666666666668, 0, '1970-01-20 01:00'), Text(19.083333333333332, 0, '1970-01-20 02:00'), Text(19.125, 0, '1970-01-20 03:00'), Text(19.166666666666668, 0, '1970-01-20 04:00'), Text(19.208333333333332, 0, '1970-01-20 05:00'), Text(19.25, 0, '1970-01-20 06:00'), Text(19.291666666666668, 0, '1970-01-20 07:00'), Text(19.333333333333332, 0, '1970-01-20 08:00'), Text(19.375, 0, '1970-01-20 09:00'), Text(19.416666666666668, 0, '1970-01-20 10:00'), Text(19.458333333333332, 0, '1970-01-20 11:00'), Text(19.5, 0, '1970-01-20 12:00'), Text(19.541666666666668, 0, '1970-01-20 13:00'), Text(19.583333333333332, 0, '1970-01-20 14:00'), Text(19.625, 0, '1970-01-20 15:00'), Text(19.666666666666668, 0, '1970-01-20 16:00'), Text(19.708333333333332, 0, '1970-01-20 17:00'), Text(19.75, 0, '1970-01-20 18:00'), Text(19.791666666666668, 0, '1970-01-20 19:00'), Text(19.833333333333332, 0, '1970-01-20 20:00'), Text(19.875, 0, '1970-01-20 21:00'), Text(19.916666666666668, 0, '1970-01-20 22:00'), Text(19.958333333333332, 0, '1970-01-20 23:00'), Text(20.0, 0, '1970-01-21 00:00'), Text(20.041666666666668, 0, '1970-01-21 01:00'), Text(20.083333333333332, 0, '1970-01-21 02:00'), Text(20.125, 0, '1970-01-21 03:00'), Text(20.166666666666668, 0, '1970-01-21 04:00'), Text(20.208333333333332, 0, '1970-01-21 05:00'), Text(20.25, 0, '1970-01-21 06:00'), Text(20.291666666666668, 0, '1970-01-21 07:00'), Text(20.333333333333332, 0, '1970-01-21 08:00'), Text(20.375, 0, '1970-01-21 09:00'), Text(20.416666666666668, 0, '1970-01-21 10:00'), Text(20.458333333333332, 0, '1970-01-21 11:00'), Text(20.5, 0, '1970-01-21 12:00'), Text(20.541666666666668, 0, '1970-01-21 13:00'), Text(20.583333333333332, 0, '1970-01-21 14:00'), Text(20.625, 0, '1970-01-21 15:00'), Text(20.666666666666668, 0, '1970-01-21 16:00'), Text(20.708333333333332, 0, '1970-01-21 17:00'), Text(20.75, 0, '1970-01-21 18:00'), Text(20.791666666666668, 0, '1970-01-21 19:00'), Text(20.833333333333332, 0, '1970-01-21 20:00'), Text(20.875, 0, '1970-01-21 21:00'), Text(20.916666666666668, 0, '1970-01-21 22:00'), Text(20.958333333333332, 0, '1970-01-21 23:00'), Text(21.0, 0, '1970-01-22 00:00'), Text(21.041666666666668, 0, '1970-01-22 01:00'), Text(21.083333333333332, 0, '1970-01-22 02:00'), Text(21.125, 0, '1970-01-22 03:00'), Text(21.166666666666668, 0, '1970-01-22 04:00'), Text(21.208333333333332, 0, '1970-01-22 05:00'), Text(21.25, 0, '1970-01-22 06:00'), Text(21.291666666666668, 0, '1970-01-22 07:00'), Text(21.333333333333332, 0, '1970-01-22 08:00'), Text(21.375, 0, '1970-01-22 09:00'), Text(21.416666666666668, 0, '1970-01-22 10:00'), Text(21.458333333333332, 0, '1970-01-22 11:00'), Text(21.5, 0, '1970-01-22 12:00'), Text(21.541666666666668, 0, '1970-01-22 13:00'), Text(21.583333333333332, 0, '1970-01-22 14:00'), Text(21.625, 0, '1970-01-22 15:00'), Text(21.666666666666668, 0, '1970-01-22 16:00'), Text(21.708333333333332, 0, '1970-01-22 17:00'), Text(21.75, 0, '1970-01-22 18:00'), Text(21.791666666666668, 0, '1970-01-22 19:00'), Text(21.833333333333332, 0, '1970-01-22 20:00'), Text(21.875, 0, '1970-01-22 21:00'), Text(21.916666666666668, 0, '1970-01-22 22:00'), Text(21.958333333333332, 0, '1970-01-22 23:00'), Text(22.0, 0, '1970-01-23 00:00'), Text(22.041666666666668, 0, '1970-01-23 01:00')])]]
+
+# [[file:(array([-1.        , -0.95833333, -0.91666667, -0.875     , -0.83333333,
+#        -0.79166667, -0.75      , -0.70833333, -0.66666667, -0.625     ,
+#        -0.58333333, -0.54166667, -0.5       , -0.45833333, -0.41666667,
+#        -0.375     , -0.33333333, -0.29166667, -0.25      , -0.20833333,
+#        -0.16666667, -0.125     , -0.08333333, -0.04166667,  0.        ,
+#         0.04166667,  0.08333333,  0.125     ,  0.16666667,  0.20833333,
+#         0.25      ,  0.29166667,  0.33333333,  0.375     ,  0.41666667,
+#         0.45833333,  0.5       ,  0.54166667,  0.58333333,  0.625     ,
+#         0.66666667,  0.70833333,  0.75      ,  0.79166667,  0.83333333,
+#         0.875     ,  0.91666667,  0.95833333,  1.        ,  1.04166667,
+#         1.08333333,  1.125     ,  1.16666667,  1.20833333,  1.25      ,
+#         1.29166667,  1.33333333,  1.375     ,  1.41666667,  1.45833333,
+#         1.5       ,  1.54166667,  1.58333333,  1.625     ,  1.66666667,
+#         1.70833333,  1.75      ,  1.79166667,  1.83333333,  1.875     ,
+#         1.91666667,  1.95833333,  2.        ,  2.04166667,  2.08333333,
+#         2.125     ,  2.16666667,  2.20833333,  2.25      ,  2.29166667,
+#         2.33333333,  2.375     ,  2.41666667,  2.45833333,  2.5       ,
+#         2.54166667,  2.58333333,  2.625     ,  2.66666667,  2.70833333,
+#         2.75      ,  2.79166667,  2.83333333,  2.875     ,  2.91666667,
+#         2.95833333,  3.        ,  3.04166667,  3.08333333,  3.125     ,
+#         3.16666667,  3.20833333,  3.25      ,  3.29166667,  3.33333333,
+#         3.375     ,  3.41666667,  3.45833333,  3.5       ,  3.54166667,
+#         3.58333333,  3.625     ,  3.66666667,  3.70833333,  3.75      ,
+#         3.79166667,  3.83333333,  3.875     ,  3.91666667,  3.95833333,
+#         4.        ,  4.04166667,  4.08333333,  4.125     ,  4.16666667,
+#         4.20833333,  4.25      ,  4.29166667,  4.33333333,  4.375     ,
+#         4.41666667,  4.45833333,  4.5       ,  4.54166667,  4.58333333,
+#         4.625     ,  4.66666667,  4.70833333,  4.75      ,  4.79166667,
+#         4.83333333,  4.875     ,  4.91666667,  4.95833333,  5.        ,
+#         5.04166667,  5.08333333,  5.125     ,  5.16666667,  5.20833333,
+#         5.25      ,  5.29166667,  5.33333333,  5.375     ,  5.41666667,
+#         5.45833333,  5.5       ,  5.54166667,  5.58333333,  5.625     ,
+#         5.66666667,  5.70833333,  5.75      ,  5.79166667,  5.83333333,
+#         5.875     ,  5.91666667,  5.95833333,  6.        ,  6.04166667,
+#         6.08333333,  6.125     ,  6.16666667,  6.20833333,  6.25      ,
+#         6.29166667,  6.33333333,  6.375     ,  6.41666667,  6.45833333,
+#         6.5       ,  6.54166667,  6.58333333,  6.625     ,  6.66666667,
+#         6.70833333,  6.75      ,  6.79166667,  6.83333333,  6.875     ,
+#         6.91666667,  6.95833333,  7.        ,  7.04166667,  7.08333333,
+#         7.125     ,  7.16666667,  7.20833333,  7.25      ,  7.29166667,
+#         7.33333333,  7.375     ,  7.41666667,  7.45833333,  7.5       ,
+#         7.54166667,  7.58333333,  7.625     ,  7.66666667,  7.70833333,
+#         7.75      ,  7.79166667,  7.83333333,  7.875     ,  7.91666667,
+#         7.95833333,  8.        ,  8.04166667,  8.08333333,  8.125     ,
+#         8.16666667,  8.20833333,  8.25      ,  8.29166667,  8.33333333,
+#         8.375     ,  8.41666667,  8.45833333,  8.5       ,  8.54166667,
+#         8.58333333,  8.625     ,  8.66666667,  8.70833333,  8.75      ,
+#         8.79166667,  8.83333333,  8.875     ,  8.91666667,  8.95833333,
+#         9.        ,  9.04166667,  9.08333333,  9.125     ,  9.16666667,
+#         9.20833333,  9.25      ,  9.29166667,  9.33333333,  9.375     ,
+#         9.41666667,  9.45833333,  9.5       ,  9.54166667,  9.58333333,
+#         9.625     ,  9.66666667,  9.70833333,  9.75      ,  9.79166667,
+#         9.83333333,  9.875     ,  9.91666667,  9.95833333, 10.        ,
+#        10.04166667, 10.08333333, 10.125     , 10.16666667, 10.20833333,
+#        10.25      , 10.29166667, 10.33333333, 10.375     , 10.41666667,
+#        10.45833333, 10.5       , 10.54166667, 10.58333333, 10.625     ,
+#        10.66666667, 10.70833333, 10.75      , 10.79166667, 10.83333333,
+#        10.875     , 10.91666667, 10.95833333, 11.        , 11.04166667,
+#        11.08333333, 11.125     , 11.16666667, 11.20833333, 11.25      ,
+#        11.29166667, 11.33333333, 11.375     , 11.41666667, 11.45833333,
+#        11.5       , 11.54166667, 11.58333333, 11.625     , 11.66666667,
+#        11.70833333, 11.75      , 11.79166667, 11.83333333, 11.875     ,
+#        11.91666667, 11.95833333, 12.        , 12.04166667, 12.08333333,
+#        12.125     , 12.16666667, 12.20833333, 12.25      , 12.29166667,
+#        12.33333333, 12.375     , 12.41666667, 12.45833333, 12.5       ,
+#        12.54166667, 12.58333333, 12.625     , 12.66666667, 12.70833333,
+#        12.75      , 12.79166667, 12.83333333, 12.875     , 12.91666667,
+#        12.95833333, 13.        , 13.04166667, 13.08333333, 13.125     ,
+#        13.16666667, 13.20833333, 13.25      , 13.29166667, 13.33333333,
+#        13.375     , 13.41666667, 13.45833333, 13.5       , 13.54166667,
+#        13.58333333, 13.625     , 13.66666667, 13.70833333, 13.75      ,
+#        13.79166667, 13.83333333, 13.875     , 13.91666667, 13.95833333,
+#        14.        , 14.04166667, 14.08333333, 14.125     , 14.16666667,
+#        14.20833333, 14.25      , 14.29166667, 14.33333333, 14.375     ,
+#        14.41666667, 14.45833333, 14.5       , 14.54166667, 14.58333333,
+#        14.625     , 14.66666667, 14.70833333, 14.75      , 14.79166667,
+#        14.83333333, 14.875     , 14.91666667, 14.95833333, 15.        ,
+#        15.04166667, 15.08333333, 15.125     , 15.16666667, 15.20833333,
+#        15.25      , 15.29166667, 15.33333333, 15.375     , 15.41666667,
+#        15.45833333, 15.5       , 15.54166667, 15.58333333, 15.625     ,
+#        15.66666667, 15.70833333, 15.75      , 15.79166667, 15.83333333,
+#        15.875     , 15.91666667, 15.95833333, 16.        , 16.04166667,
+#        16.08333333, 16.125     , 16.16666667, 16.20833333, 16.25      ,
+#        16.29166667, 16.33333333, 16.375     , 16.41666667, 16.45833333,
+#        16.5       , 16.54166667, 16.58333333, 16.625     , 16.66666667,
+#        16.70833333, 16.75      , 16.79166667, 16.83333333, 16.875     ,
+#        16.91666667, 16.95833333, 17.        , 17.04166667, 17.08333333,
+#        17.125     , 17.16666667, 17.20833333, 17.25      , 17.29166667,
+#        17.33333333, 17.375     , 17.41666667, 17.45833333, 17.5       ,
+#        17.54166667, 17.58333333, 17.625     , 17.66666667, 17.70833333,
+#        17.75      , 17.79166667, 17.83333333, 17.875     , 17.91666667,
+#        17.95833333, 18.        , 18.04166667, 18.08333333, 18.125     ,
+#        18.16666667, 18.20833333, 18.25      , 18.29166667, 18.33333333,
+#        18.375     , 18.41666667, 18.45833333, 18.5       , 18.54166667,
+#        18.58333333, 18.625     , 18.66666667, 18.70833333, 18.75      ,
+#        18.79166667, 18.83333333, 18.875     , 18.91666667, 18.95833333,
+#        19.        , 19.04166667, 19.08333333, 19.125     , 19.16666667,
+#        19.20833333, 19.25      , 19.29166667, 19.33333333, 19.375     ,
+#        19.41666667, 19.45833333, 19.5       , 19.54166667, 19.58333333,
+#        19.625     , 19.66666667, 19.70833333, 19.75      , 19.79166667,
+#        19.83333333, 19.875     , 19.91666667, 19.95833333, 20.        ,
+#        20.04166667, 20.08333333, 20.125     , 20.16666667, 20.20833333,
+#        20.25      , 20.29166667, 20.33333333, 20.375     , 20.41666667,
+#        20.45833333, 20.5       , 20.54166667, 20.58333333, 20.625     ,
+#        20.66666667, 20.70833333, 20.75      , 20.79166667, 20.83333333,
+#        20.875     , 20.91666667, 20.95833333, 21.        ]), [Text(-1.0, 0, '1969-12-31 00:00'), Text(-0.9583333333333334, 0, '1969-12-31 01:00'), Text(-0.9166666666666666, 0, '1969-12-31 02:00'), Text(-0.875, 0, '1969-12-31 03:00'), Text(-0.8333333333333334, 0, '1969-12-31 04:00'), Text(-0.7916666666666666, 0, '1969-12-31 05:00'), Text(-0.75, 0, '1969-12-31 06:00'), Text(-0.7083333333333334, 0, '1969-12-31 07:00'), Text(-0.6666666666666666, 0, '1969-12-31 08:00'), Text(-0.625, 0, '1969-12-31 09:00'), Text(-0.5833333333333334, 0, '1969-12-31 10:00'), Text(-0.5416666666666666, 0, '1969-12-31 11:00'), Text(-0.5, 0, '1969-12-31 12:00'), Text(-0.4583333333333333, 0, '1969-12-31 13:00'), Text(-0.4166666666666667, 0, '1969-12-31 14:00'), Text(-0.375, 0, '1969-12-31 15:00'), Text(-0.3333333333333333, 0, '1969-12-31 16:00'), Text(-0.2916666666666667, 0, '1969-12-31 17:00'), Text(-0.25, 0, '1969-12-31 18:00'), Text(-0.20833333333333334, 0, '1969-12-31 19:00'), Text(-0.16666666666666666, 0, '1969-12-31 20:00'), Text(-0.125, 0, '1969-12-31 21:00'), Text(-0.08333333333333333, 0, '1969-12-31 22:00'), Text(-0.041666666666666664, 0, '1969-12-31 23:00'), Text(0.0, 0, '1970-01-01 00:00'), Text(0.041666666666666664, 0, '1970-01-01 01:00'), Text(0.08333333333333333, 0, '1970-01-01 02:00'), Text(0.125, 0, '1970-01-01 03:00'), Text(0.16666666666666666, 0, '1970-01-01 04:00'), Text(0.20833333333333334, 0, '1970-01-01 05:00'), Text(0.25, 0, '1970-01-01 06:00'), Text(0.2916666666666667, 0, '1970-01-01 07:00'), Text(0.3333333333333333, 0, '1970-01-01 08:00'), Text(0.375, 0, '1970-01-01 09:00'), Text(0.4166666666666667, 0, '1970-01-01 10:00'), Text(0.4583333333333333, 0, '1970-01-01 11:00'), Text(0.5, 0, '1970-01-01 12:00'), Text(0.5416666666666666, 0, '1970-01-01 13:00'), Text(0.5833333333333334, 0, '1970-01-01 14:00'), Text(0.625, 0, '1970-01-01 15:00'), Text(0.6666666666666666, 0, '1970-01-01 16:00'), Text(0.7083333333333334, 0, '1970-01-01 17:00'), Text(0.75, 0, '1970-01-01 18:00'), Text(0.7916666666666666, 0, '1970-01-01 19:00'), Text(0.8333333333333334, 0, '1970-01-01 20:00'), Text(0.875, 0, '1970-01-01 21:00'), Text(0.9166666666666666, 0, '1970-01-01 22:00'), Text(0.9583333333333334, 0, '1970-01-01 23:00'), Text(1.0, 0, '1970-01-02 00:00'), Text(1.0416666666666667, 0, '1970-01-02 01:00'), Text(1.0833333333333333, 0, '1970-01-02 02:00'), Text(1.125, 0, '1970-01-02 03:00'), Text(1.1666666666666667, 0, '1970-01-02 04:00'), Text(1.2083333333333333, 0, '1970-01-02 05:00'), Text(1.25, 0, '1970-01-02 06:00'), Text(1.2916666666666667, 0, '1970-01-02 07:00'), Text(1.3333333333333333, 0, '1970-01-02 08:00'), Text(1.375, 0, '1970-01-02 09:00'), Text(1.4166666666666667, 0, '1970-01-02 10:00'), Text(1.4583333333333333, 0, '1970-01-02 11:00'), Text(1.5, 0, '1970-01-02 12:00'), Text(1.5416666666666667, 0, '1970-01-02 13:00'), Text(1.5833333333333333, 0, '1970-01-02 14:00'), Text(1.625, 0, '1970-01-02 15:00'), Text(1.6666666666666667, 0, '1970-01-02 16:00'), Text(1.7083333333333333, 0, '1970-01-02 17:00'), Text(1.75, 0, '1970-01-02 18:00'), Text(1.7916666666666667, 0, '1970-01-02 19:00'), Text(1.8333333333333333, 0, '1970-01-02 20:00'), Text(1.875, 0, '1970-01-02 21:00'), Text(1.9166666666666667, 0, '1970-01-02 22:00'), Text(1.9583333333333333, 0, '1970-01-02 23:00'), Text(2.0, 0, '1970-01-03 00:00'), Text(2.0416666666666665, 0, '1970-01-03 01:00'), Text(2.0833333333333335, 0, '1970-01-03 02:00'), Text(2.125, 0, '1970-01-03 03:00'), Text(2.1666666666666665, 0, '1970-01-03 04:00'), Text(2.2083333333333335, 0, '1970-01-03 05:00'), Text(2.25, 0, '1970-01-03 06:00'), Text(2.2916666666666665, 0, '1970-01-03 07:00'), Text(2.3333333333333335, 0, '1970-01-03 08:00'), Text(2.375, 0, '1970-01-03 09:00'), Text(2.4166666666666665, 0, '1970-01-03 10:00'), Text(2.4583333333333335, 0, '1970-01-03 11:00'), Text(2.5, 0, '1970-01-03 12:00'), Text(2.5416666666666665, 0, '1970-01-03 13:00'), Text(2.5833333333333335, 0, '1970-01-03 14:00'), Text(2.625, 0, '1970-01-03 15:00'), Text(2.6666666666666665, 0, '1970-01-03 16:00'), Text(2.7083333333333335, 0, '1970-01-03 17:00'), Text(2.75, 0, '1970-01-03 18:00'), Text(2.7916666666666665, 0, '1970-01-03 19:00'), Text(2.8333333333333335, 0, '1970-01-03 20:00'), Text(2.875, 0, '1970-01-03 21:00'), Text(2.9166666666666665, 0, '1970-01-03 22:00'), Text(2.9583333333333335, 0, '1970-01-03 23:00'), Text(3.0, 0, '1970-01-04 00:00'), Text(3.0416666666666665, 0, '1970-01-04 01:00'), Text(3.0833333333333335, 0, '1970-01-04 02:00'), Text(3.125, 0, '1970-01-04 03:00'), Text(3.1666666666666665, 0, '1970-01-04 04:00'), Text(3.2083333333333335, 0, '1970-01-04 05:00'), Text(3.25, 0, '1970-01-04 06:00'), Text(3.2916666666666665, 0, '1970-01-04 07:00'), Text(3.3333333333333335, 0, '1970-01-04 08:00'), Text(3.375, 0, '1970-01-04 09:00'), Text(3.4166666666666665, 0, '1970-01-04 10:00'), Text(3.4583333333333335, 0, '1970-01-04 11:00'), Text(3.5, 0, '1970-01-04 12:00'), Text(3.5416666666666665, 0, '1970-01-04 13:00'), Text(3.5833333333333335, 0, '1970-01-04 14:00'), Text(3.625, 0, '1970-01-04 15:00'), Text(3.6666666666666665, 0, '1970-01-04 16:00'), Text(3.7083333333333335, 0, '1970-01-04 17:00'), Text(3.75, 0, '1970-01-04 18:00'), Text(3.7916666666666665, 0, '1970-01-04 19:00'), Text(3.8333333333333335, 0, '1970-01-04 20:00'), Text(3.875, 0, '1970-01-04 21:00'), Text(3.9166666666666665, 0, '1970-01-04 22:00'), Text(3.9583333333333335, 0, '1970-01-04 23:00'), Text(4.0, 0, '1970-01-05 00:00'), Text(4.041666666666667, 0, '1970-01-05 01:00'), Text(4.083333333333333, 0, '1970-01-05 02:00'), Text(4.125, 0, '1970-01-05 03:00'), Text(4.166666666666667, 0, '1970-01-05 04:00'), Text(4.208333333333333, 0, '1970-01-05 05:00'), Text(4.25, 0, '1970-01-05 06:00'), Text(4.291666666666667, 0, '1970-01-05 07:00'), Text(4.333333333333333, 0, '1970-01-05 08:00'), Text(4.375, 0, '1970-01-05 09:00'), Text(4.416666666666667, 0, '1970-01-05 10:00'), Text(4.458333333333333, 0, '1970-01-05 11:00'), Text(4.5, 0, '1970-01-05 12:00'), Text(4.541666666666667, 0, '1970-01-05 13:00'), Text(4.583333333333333, 0, '1970-01-05 14:00'), Text(4.625, 0, '1970-01-05 15:00'), Text(4.666666666666667, 0, '1970-01-05 16:00'), Text(4.708333333333333, 0, '1970-01-05 17:00'), Text(4.75, 0, '1970-01-05 18:00'), Text(4.791666666666667, 0, '1970-01-05 19:00'), Text(4.833333333333333, 0, '1970-01-05 20:00'), Text(4.875, 0, '1970-01-05 21:00'), Text(4.916666666666667, 0, '1970-01-05 22:00'), Text(4.958333333333333, 0, '1970-01-05 23:00'), Text(5.0, 0, '1970-01-06 00:00'), Text(5.041666666666667, 0, '1970-01-06 01:00'), Text(5.083333333333333, 0, '1970-01-06 02:00'), Text(5.125, 0, '1970-01-06 03:00'), Text(5.166666666666667, 0, '1970-01-06 04:00'), Text(5.208333333333333, 0, '1970-01-06 05:00'), Text(5.25, 0, '1970-01-06 06:00'), Text(5.291666666666667, 0, '1970-01-06 07:00'), Text(5.333333333333333, 0, '1970-01-06 08:00'), Text(5.375, 0, '1970-01-06 09:00'), Text(5.416666666666667, 0, '1970-01-06 10:00'), Text(5.458333333333333, 0, '1970-01-06 11:00'), Text(5.5, 0, '1970-01-06 12:00'), Text(5.541666666666667, 0, '1970-01-06 13:00'), Text(5.583333333333333, 0, '1970-01-06 14:00'), Text(5.625, 0, '1970-01-06 15:00'), Text(5.666666666666667, 0, '1970-01-06 16:00'), Text(5.708333333333333, 0, '1970-01-06 17:00'), Text(5.75, 0, '1970-01-06 18:00'), Text(5.791666666666667, 0, '1970-01-06 19:00'), Text(5.833333333333333, 0, '1970-01-06 20:00'), Text(5.875, 0, '1970-01-06 21:00'), Text(5.916666666666667, 0, '1970-01-06 22:00'), Text(5.958333333333333, 0, '1970-01-06 23:00'), Text(6.0, 0, '1970-01-07 00:00'), Text(6.041666666666667, 0, '1970-01-07 01:00'), Text(6.083333333333333, 0, '1970-01-07 02:00'), Text(6.125, 0, '1970-01-07 03:00'), Text(6.166666666666667, 0, '1970-01-07 04:00'), Text(6.208333333333333, 0, '1970-01-07 05:00'), Text(6.25, 0, '1970-01-07 06:00'), Text(6.291666666666667, 0, '1970-01-07 07:00'), Text(6.333333333333333, 0, '1970-01-07 08:00'), Text(6.375, 0, '1970-01-07 09:00'), Text(6.416666666666667, 0, '1970-01-07 10:00'), Text(6.458333333333333, 0, '1970-01-07 11:00'), Text(6.5, 0, '1970-01-07 12:00'), Text(6.541666666666667, 0, '1970-01-07 13:00'), Text(6.583333333333333, 0, '1970-01-07 14:00'), Text(6.625, 0, '1970-01-07 15:00'), Text(6.666666666666667, 0, '1970-01-07 16:00'), Text(6.708333333333333, 0, '1970-01-07 17:00'), Text(6.75, 0, '1970-01-07 18:00'), Text(6.791666666666667, 0, '1970-01-07 19:00'), Text(6.833333333333333, 0, '1970-01-07 20:00'), Text(6.875, 0, '1970-01-07 21:00'), Text(6.916666666666667, 0, '1970-01-07 22:00'), Text(6.958333333333333, 0, '1970-01-07 23:00'), Text(7.0, 0, '1970-01-08 00:00'), Text(7.041666666666667, 0, '1970-01-08 01:00'), Text(7.083333333333333, 0, '1970-01-08 02:00'), Text(7.125, 0, '1970-01-08 03:00'), Text(7.166666666666667, 0, '1970-01-08 04:00'), Text(7.208333333333333, 0, '1970-01-08 05:00'), Text(7.25, 0, '1970-01-08 06:00'), Text(7.291666666666667, 0, '1970-01-08 07:00'), Text(7.333333333333333, 0, '1970-01-08 08:00'), Text(7.375, 0, '1970-01-08 09:00'), Text(7.416666666666667, 0, '1970-01-08 10:00'), Text(7.458333333333333, 0, '1970-01-08 11:00'), Text(7.5, 0, '1970-01-08 12:00'), Text(7.541666666666667, 0, '1970-01-08 13:00'), Text(7.583333333333333, 0, '1970-01-08 14:00'), Text(7.625, 0, '1970-01-08 15:00'), Text(7.666666666666667, 0, '1970-01-08 16:00'), Text(7.708333333333333, 0, '1970-01-08 17:00'), Text(7.75, 0, '1970-01-08 18:00'), Text(7.791666666666667, 0, '1970-01-08 19:00'), Text(7.833333333333333, 0, '1970-01-08 20:00'), Text(7.875, 0, '1970-01-08 21:00'), Text(7.916666666666667, 0, '1970-01-08 22:00'), Text(7.958333333333333, 0, '1970-01-08 23:00'), Text(8.0, 0, '1970-01-09 00:00'), Text(8.041666666666666, 0, '1970-01-09 01:00'), Text(8.083333333333334, 0, '1970-01-09 02:00'), Text(8.125, 0, '1970-01-09 03:00'), Text(8.166666666666666, 0, '1970-01-09 04:00'), Text(8.208333333333334, 0, '1970-01-09 05:00'), Text(8.25, 0, '1970-01-09 06:00'), Text(8.291666666666666, 0, '1970-01-09 07:00'), Text(8.333333333333334, 0, '1970-01-09 08:00'), Text(8.375, 0, '1970-01-09 09:00'), Text(8.416666666666666, 0, '1970-01-09 10:00'), Text(8.458333333333334, 0, '1970-01-09 11:00'), Text(8.5, 0, '1970-01-09 12:00'), Text(8.541666666666666, 0, '1970-01-09 13:00'), Text(8.583333333333334, 0, '1970-01-09 14:00'), Text(8.625, 0, '1970-01-09 15:00'), Text(8.666666666666666, 0, '1970-01-09 16:00'), Text(8.708333333333334, 0, '1970-01-09 17:00'), Text(8.75, 0, '1970-01-09 18:00'), Text(8.791666666666666, 0, '1970-01-09 19:00'), Text(8.833333333333334, 0, '1970-01-09 20:00'), Text(8.875, 0, '1970-01-09 21:00'), Text(8.916666666666666, 0, '1970-01-09 22:00'), Text(8.958333333333334, 0, '1970-01-09 23:00'), Text(9.0, 0, '1970-01-10 00:00'), Text(9.041666666666666, 0, '1970-01-10 01:00'), Text(9.083333333333334, 0, '1970-01-10 02:00'), Text(9.125, 0, '1970-01-10 03:00'), Text(9.166666666666666, 0, '1970-01-10 04:00'), Text(9.208333333333334, 0, '1970-01-10 05:00'), Text(9.25, 0, '1970-01-10 06:00'), Text(9.291666666666666, 0, '1970-01-10 07:00'), Text(9.333333333333334, 0, '1970-01-10 08:00'), Text(9.375, 0, '1970-01-10 09:00'), Text(9.416666666666666, 0, '1970-01-10 10:00'), Text(9.458333333333334, 0, '1970-01-10 11:00'), Text(9.5, 0, '1970-01-10 12:00'), Text(9.541666666666666, 0, '1970-01-10 13:00'), Text(9.583333333333334, 0, '1970-01-10 14:00'), Text(9.625, 0, '1970-01-10 15:00'), Text(9.666666666666666, 0, '1970-01-10 16:00'), Text(9.708333333333334, 0, '1970-01-10 17:00'), Text(9.75, 0, '1970-01-10 18:00'), Text(9.791666666666666, 0, '1970-01-10 19:00'), Text(9.833333333333334, 0, '1970-01-10 20:00'), Text(9.875, 0, '1970-01-10 21:00'), Text(9.916666666666666, 0, '1970-01-10 22:00'), Text(9.958333333333334, 0, '1970-01-10 23:00'), Text(10.0, 0, '1970-01-11 00:00'), Text(10.041666666666666, 0, '1970-01-11 01:00'), Text(10.083333333333334, 0, '1970-01-11 02:00'), Text(10.125, 0, '1970-01-11 03:00'), Text(10.166666666666666, 0, '1970-01-11 04:00'), Text(10.208333333333334, 0, '1970-01-11 05:00'), Text(10.25, 0, '1970-01-11 06:00'), Text(10.291666666666666, 0, '1970-01-11 07:00'), Text(10.333333333333334, 0, '1970-01-11 08:00'), Text(10.375, 0, '1970-01-11 09:00'), Text(10.416666666666666, 0, '1970-01-11 10:00'), Text(10.458333333333334, 0, '1970-01-11 11:00'), Text(10.5, 0, '1970-01-11 12:00'), Text(10.541666666666666, 0, '1970-01-11 13:00'), Text(10.583333333333334, 0, '1970-01-11 14:00'), Text(10.625, 0, '1970-01-11 15:00'), Text(10.666666666666666, 0, '1970-01-11 16:00'), Text(10.708333333333334, 0, '1970-01-11 17:00'), Text(10.75, 0, '1970-01-11 18:00'), Text(10.791666666666666, 0, '1970-01-11 19:00'), Text(10.833333333333334, 0, '1970-01-11 20:00'), Text(10.875, 0, '1970-01-11 21:00'), Text(10.916666666666666, 0, '1970-01-11 22:00'), Text(10.958333333333334, 0, '1970-01-11 23:00'), Text(11.0, 0, '1970-01-12 00:00'), Text(11.041666666666666, 0, '1970-01-12 01:00'), Text(11.083333333333334, 0, '1970-01-12 02:00'), Text(11.125, 0, '1970-01-12 03:00'), Text(11.166666666666666, 0, '1970-01-12 04:00'), Text(11.208333333333334, 0, '1970-01-12 05:00'), Text(11.25, 0, '1970-01-12 06:00'), Text(11.291666666666666, 0, '1970-01-12 07:00'), Text(11.333333333333334, 0, '1970-01-12 08:00'), Text(11.375, 0, '1970-01-12 09:00'), Text(11.416666666666666, 0, '1970-01-12 10:00'), Text(11.458333333333334, 0, '1970-01-12 11:00'), Text(11.5, 0, '1970-01-12 12:00'), Text(11.541666666666666, 0, '1970-01-12 13:00'), Text(11.583333333333334, 0, '1970-01-12 14:00'), Text(11.625, 0, '1970-01-12 15:00'), Text(11.666666666666666, 0, '1970-01-12 16:00'), Text(11.708333333333334, 0, '1970-01-12 17:00'), Text(11.75, 0, '1970-01-12 18:00'), Text(11.791666666666666, 0, '1970-01-12 19:00'), Text(11.833333333333334, 0, '1970-01-12 20:00'), Text(11.875, 0, '1970-01-12 21:00'), Text(11.916666666666666, 0, '1970-01-12 22:00'), Text(11.958333333333334, 0, '1970-01-12 23:00'), Text(12.0, 0, '1970-01-13 00:00'), Text(12.041666666666666, 0, '1970-01-13 01:00'), Text(12.083333333333334, 0, '1970-01-13 02:00'), Text(12.125, 0, '1970-01-13 03:00'), Text(12.166666666666666, 0, '1970-01-13 04:00'), Text(12.208333333333334, 0, '1970-01-13 05:00'), Text(12.25, 0, '1970-01-13 06:00'), Text(12.291666666666666, 0, '1970-01-13 07:00'), Text(12.333333333333334, 0, '1970-01-13 08:00'), Text(12.375, 0, '1970-01-13 09:00'), Text(12.416666666666666, 0, '1970-01-13 10:00'), Text(12.458333333333334, 0, '1970-01-13 11:00'), Text(12.5, 0, '1970-01-13 12:00'), Text(12.541666666666666, 0, '1970-01-13 13:00'), Text(12.583333333333334, 0, '1970-01-13 14:00'), Text(12.625, 0, '1970-01-13 15:00'), Text(12.666666666666666, 0, '1970-01-13 16:00'), Text(12.708333333333334, 0, '1970-01-13 17:00'), Text(12.75, 0, '1970-01-13 18:00'), Text(12.791666666666666, 0, '1970-01-13 19:00'), Text(12.833333333333334, 0, '1970-01-13 20:00'), Text(12.875, 0, '1970-01-13 21:00'), Text(12.916666666666666, 0, '1970-01-13 22:00'), Text(12.958333333333334, 0, '1970-01-13 23:00'), Text(13.0, 0, '1970-01-14 00:00'), Text(13.041666666666666, 0, '1970-01-14 01:00'), Text(13.083333333333334, 0, '1970-01-14 02:00'), Text(13.125, 0, '1970-01-14 03:00'), Text(13.166666666666666, 0, '1970-01-14 04:00'), Text(13.208333333333334, 0, '1970-01-14 05:00'), Text(13.25, 0, '1970-01-14 06:00'), Text(13.291666666666666, 0, '1970-01-14 07:00'), Text(13.333333333333334, 0, '1970-01-14 08:00'), Text(13.375, 0, '1970-01-14 09:00'), Text(13.416666666666666, 0, '1970-01-14 10:00'), Text(13.458333333333334, 0, '1970-01-14 11:00'), Text(13.5, 0, '1970-01-14 12:00'), Text(13.541666666666666, 0, '1970-01-14 13:00'), Text(13.583333333333334, 0, '1970-01-14 14:00'), Text(13.625, 0, '1970-01-14 15:00'), Text(13.666666666666666, 0, '1970-01-14 16:00'), Text(13.708333333333334, 0, '1970-01-14 17:00'), Text(13.75, 0, '1970-01-14 18:00'), Text(13.791666666666666, 0, '1970-01-14 19:00'), Text(13.833333333333334, 0, '1970-01-14 20:00'), Text(13.875, 0, '1970-01-14 21:00'), Text(13.916666666666666, 0, '1970-01-14 22:00'), Text(13.958333333333334, 0, '1970-01-14 23:00'), Text(14.0, 0, '1970-01-15 00:00'), Text(14.041666666666666, 0, '1970-01-15 01:00'), Text(14.083333333333334, 0, '1970-01-15 02:00'), Text(14.125, 0, '1970-01-15 03:00'), Text(14.166666666666666, 0, '1970-01-15 04:00'), Text(14.208333333333334, 0, '1970-01-15 05:00'), Text(14.25, 0, '1970-01-15 06:00'), Text(14.291666666666666, 0, '1970-01-15 07:00'), Text(14.333333333333334, 0, '1970-01-15 08:00'), Text(14.375, 0, '1970-01-15 09:00'), Text(14.416666666666666, 0, '1970-01-15 10:00'), Text(14.458333333333334, 0, '1970-01-15 11:00'), Text(14.5, 0, '1970-01-15 12:00'), Text(14.541666666666666, 0, '1970-01-15 13:00'), Text(14.583333333333334, 0, '1970-01-15 14:00'), Text(14.625, 0, '1970-01-15 15:00'), Text(14.666666666666666, 0, '1970-01-15 16:00'), Text(14.708333333333334, 0, '1970-01-15 17:00'), Text(14.75, 0, '1970-01-15 18:00'), Text(14.791666666666666, 0, '1970-01-15 19:00'), Text(14.833333333333334, 0, '1970-01-15 20:00'), Text(14.875, 0, '1970-01-15 21:00'), Text(14.916666666666666, 0, '1970-01-15 22:00'), Text(14.958333333333334, 0, '1970-01-15 23:00'), Text(15.0, 0, '1970-01-16 00:00'), Text(15.041666666666666, 0, '1970-01-16 01:00'), Text(15.083333333333334, 0, '1970-01-16 02:00'), Text(15.125, 0, '1970-01-16 03:00'), Text(15.166666666666666, 0, '1970-01-16 04:00'), Text(15.208333333333334, 0, '1970-01-16 05:00'), Text(15.25, 0, '1970-01-16 06:00'), Text(15.291666666666666, 0, '1970-01-16 07:00'), Text(15.333333333333334, 0, '1970-01-16 08:00'), Text(15.375, 0, '1970-01-16 09:00'), Text(15.416666666666666, 0, '1970-01-16 10:00'), Text(15.458333333333334, 0, '1970-01-16 11:00'), Text(15.5, 0, '1970-01-16 12:00'), Text(15.541666666666666, 0, '1970-01-16 13:00'), Text(15.583333333333334, 0, '1970-01-16 14:00'), Text(15.625, 0, '1970-01-16 15:00'), Text(15.666666666666666, 0, '1970-01-16 16:00'), Text(15.708333333333334, 0, '1970-01-16 17:00'), Text(15.75, 0, '1970-01-16 18:00'), Text(15.791666666666666, 0, '1970-01-16 19:00'), Text(15.833333333333334, 0, '1970-01-16 20:00'), Text(15.875, 0, '1970-01-16 21:00'), Text(15.916666666666666, 0, '1970-01-16 22:00'), Text(15.958333333333334, 0, '1970-01-16 23:00'), Text(16.0, 0, '1970-01-17 00:00'), Text(16.041666666666668, 0, '1970-01-17 01:00'), Text(16.083333333333332, 0, '1970-01-17 02:00'), Text(16.125, 0, '1970-01-17 03:00'), Text(16.166666666666668, 0, '1970-01-17 04:00'), Text(16.208333333333332, 0, '1970-01-17 05:00'), Text(16.25, 0, '1970-01-17 06:00'), Text(16.291666666666668, 0, '1970-01-17 07:00'), Text(16.333333333333332, 0, '1970-01-17 08:00'), Text(16.375, 0, '1970-01-17 09:00'), Text(16.416666666666668, 0, '1970-01-17 10:00'), Text(16.458333333333332, 0, '1970-01-17 11:00'), Text(16.5, 0, '1970-01-17 12:00'), Text(16.541666666666668, 0, '1970-01-17 13:00'), Text(16.583333333333332, 0, '1970-01-17 14:00'), Text(16.625, 0, '1970-01-17 15:00'), Text(16.666666666666668, 0, '1970-01-17 16:00'), Text(16.708333333333332, 0, '1970-01-17 17:00'), Text(16.75, 0, '1970-01-17 18:00'), Text(16.791666666666668, 0, '1970-01-17 19:00'), Text(16.833333333333332, 0, '1970-01-17 20:00'), Text(16.875, 0, '1970-01-17 21:00'), Text(16.916666666666668, 0, '1970-01-17 22:00'), Text(16.958333333333332, 0, '1970-01-17 23:00'), Text(17.0, 0, '1970-01-18 00:00'), Text(17.041666666666668, 0, '1970-01-18 01:00'), Text(17.083333333333332, 0, '1970-01-18 02:00'), Text(17.125, 0, '1970-01-18 03:00'), Text(17.166666666666668, 0, '1970-01-18 04:00'), Text(17.208333333333332, 0, '1970-01-18 05:00'), Text(17.25, 0, '1970-01-18 06:00'), Text(17.291666666666668, 0, '1970-01-18 07:00'), Text(17.333333333333332, 0, '1970-01-18 08:00'), Text(17.375, 0, '1970-01-18 09:00'), Text(17.416666666666668, 0, '1970-01-18 10:00'), Text(17.458333333333332, 0, '1970-01-18 11:00'), Text(17.5, 0, '1970-01-18 12:00'), Text(17.541666666666668, 0, '1970-01-18 13:00'), Text(17.583333333333332, 0, '1970-01-18 14:00'), Text(17.625, 0, '1970-01-18 15:00'), Text(17.666666666666668, 0, '1970-01-18 16:00'), Text(17.708333333333332, 0, '1970-01-18 17:00'), Text(17.75, 0, '1970-01-18 18:00'), Text(17.791666666666668, 0, '1970-01-18 19:00'), Text(17.833333333333332, 0, '1970-01-18 20:00'), Text(17.875, 0, '1970-01-18 21:00'), Text(17.916666666666668, 0, '1970-01-18 22:00'), Text(17.958333333333332, 0, '1970-01-18 23:00'), Text(18.0, 0, '1970-01-19 00:00'), Text(18.041666666666668, 0, '1970-01-19 01:00'), Text(18.083333333333332, 0, '1970-01-19 02:00'), Text(18.125, 0, '1970-01-19 03:00'), Text(18.166666666666668, 0, '1970-01-19 04:00'), Text(18.208333333333332, 0, '1970-01-19 05:00'), Text(18.25, 0, '1970-01-19 06:00'), Text(18.291666666666668, 0, '1970-01-19 07:00'), Text(18.333333333333332, 0, '1970-01-19 08:00'), Text(18.375, 0, '1970-01-19 09:00'), Text(18.416666666666668, 0, '1970-01-19 10:00'), Text(18.458333333333332, 0, '1970-01-19 11:00'), Text(18.5, 0, '1970-01-19 12:00'), Text(18.541666666666668, 0, '1970-01-19 13:00'), Text(18.583333333333332, 0, '1970-01-19 14:00'), Text(18.625, 0, '1970-01-19 15:00'), Text(18.666666666666668, 0, '1970-01-19 16:00'), Text(18.708333333333332, 0, '1970-01-19 17:00'), Text(18.75, 0, '1970-01-19 18:00'), Text(18.791666666666668, 0, '1970-01-19 19:00'), Text(18.833333333333332, 0, '1970-01-19 20:00'), Text(18.875, 0, '1970-01-19 21:00'), Text(18.916666666666668, 0, '1970-01-19 22:00'), Text(18.958333333333332, 0, '1970-01-19 23:00'), Text(19.0, 0, '1970-01-20 00:00'), Text(19.041666666666668, 0, '1970-01-20 01:00'), Text(19.083333333333332, 0, '1970-01-20 02:00'), Text(19.125, 0, '1970-01-20 03:00'), Text(19.166666666666668, 0, '1970-01-20 04:00'), Text(19.208333333333332, 0, '1970-01-20 05:00'), Text(19.25, 0, '1970-01-20 06:00'), Text(19.291666666666668, 0, '1970-01-20 07:00'), Text(19.333333333333332, 0, '1970-01-20 08:00'), Text(19.375, 0, '1970-01-20 09:00'), Text(19.416666666666668, 0, '1970-01-20 10:00'), Text(19.458333333333332, 0, '1970-01-20 11:00'), Text(19.5, 0, '1970-01-20 12:00'), Text(19.541666666666668, 0, '1970-01-20 13:00'), Text(19.583333333333332, 0, '1970-01-20 14:00'), Text(19.625, 0, '1970-01-20 15:00'), Text(19.666666666666668, 0, '1970-01-20 16:00'), Text(19.708333333333332, 0, '1970-01-20 17:00'), Text(19.75, 0, '1970-01-20 18:00'), Text(19.791666666666668, 0, '1970-01-20 19:00'), Text(19.833333333333332, 0, '1970-01-20 20:00'), Text(19.875, 0, '1970-01-20 21:00'), Text(19.916666666666668, 0, '1970-01-20 22:00'), Text(19.958333333333332, 0, '1970-01-20 23:00'), Text(20.0, 0, '1970-01-21 00:00'), Text(20.041666666666668, 0, '1970-01-21 01:00'), Text(20.083333333333332, 0, '1970-01-21 02:00'), Text(20.125, 0, '1970-01-21 03:00'), Text(20.166666666666668, 0, '1970-01-21 04:00'), Text(20.208333333333332, 0, '1970-01-21 05:00'), Text(20.25, 0, '1970-01-21 06:00'), Text(20.291666666666668, 0, '1970-01-21 07:00'), Text(20.333333333333332, 0, '1970-01-21 08:00'), Text(20.375, 0, '1970-01-21 09:00'), Text(20.416666666666668, 0, '1970-01-21 10:00'), Text(20.458333333333332, 0, '1970-01-21 11:00'), Text(20.5, 0, '1970-01-21 12:00'), Text(20.541666666666668, 0, '1970-01-21 13:00'), Text(20.583333333333332, 0, '1970-01-21 14:00'), Text(20.625, 0, '1970-01-21 15:00'), Text(20.666666666666668, 0, '1970-01-21 16:00'), Text(20.708333333333332, 0, '1970-01-21 17:00'), Text(20.75, 0, '1970-01-21 18:00'), Text(20.791666666666668, 0, '1970-01-21 19:00'), Text(20.833333333333332, 0, '1970-01-21 20:00'), Text(20.875, 0, '1970-01-21 21:00'), Text(20.916666666666668, 0, '1970-01-21 22:00'), Text(20.958333333333332, 0, '1970-01-21 23:00'), Text(21.0, 0, '1970-01-22 00:00')])]]
+
+
+Debido a que el archivo index.org se abre dentro de la carpeta
+/content/, y en cambio el servidor http de emacs se ejecuta desde la
+carpeta /public/ es necesario copiar el archivo a la ubicación
+equivalente en ~/public/images~
+
+#+begin_src shell
+cp -rfv ./images/* /home/sebastianmorales/proyecto/weather-site/public/images
+#+end_src
+
+#+RESULTS:
+| './images/temperature.png'            | -> | '/home/sebastianmorales/proyecto/weather-site/public/images/temperature.png'            |
+| './images/temperature_2024-08-13.png' | -> | '/home/sebastianmorales/proyecto/weather-site/public/images/temperature_2024-08-13.png' |
+
+#+caption: Gráfica Temperatura vs Tiempo
+#+RESULTS:
+[[file:/home/sebastianmorales/proyecto/weather-site/public/images/temperature_2024-08-13.png]]
+
+
+**  Realice una gráfica de Humedad con respecto al tiempo
+
+#+begin_src python :results file :exports both :session
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import datetime
+
+# Leer el archivo CSV
+fecha_actual = datetime.date.today()
+nombre_archivo = f"/home/sebastianmorales/proyecto/clima_bogota_{fecha_actual}.csv"
+
+# Leer el CSV
+df = pd.read_csv(nombre_archivo, parse_dates=['Fecha'])
+
+# Configurar la gráfica
+fig = plt.figure(figsize=(12, 6))
+plt.plot(df['Fecha'], df['Humedad (%)'], color='blue')  # Cambiar la columna a 'Humedad (%)'
+
+# Ajustar la presentación de fechas en la imagen
+plt.gca().xaxis.set_major_locator(mdates.HourLocator(interval=1))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M'))
+
+plt.grid()
+plt.title(f'Humedad vs Tiempo en {df.Ciudad.iloc[0]}')
+plt.xlabel('Fecha y Hora')
+plt.ylabel('Humedad (%)')
+plt.xticks(rotation=40)
+fig.tight_layout()
+
+# Guardar la figura
+fname = f'/home/sebastianmorales/proyecto/weather-site/content/images/humidity_{fecha_actual}.png'
+plt.savefig(fname)
+plt.close()
+
+# Devolver solo la ruta del archivo
+print(f"[[file:{fname}]]")
+#+end_src
+
+#+RESULTS:
+# [[file:(array([-1.04166667, -1.        , -0.95833333, -0.91666667, -0.875     ,
+#        -0.83333333, -0.79166667, -0.75      , -0.70833333, -0.66666667,
+#        -0.625     , -0.58333333, -0.54166667, -0.5       , -0.45833333,
+#        -0.41666667, -0.375     , -0.33333333, -0.29166667, -0.25      ,
+#        -0.20833333, -0.16666667, -0.125     , -0.08333333, -0.04166667,
+#         0.        ,  0.04166667,  0.08333333,  0.125     ,  0.16666667,
+#         0.20833333,  0.25      ,  0.29166667,  0.33333333,  0.375     ,
+#         0.41666667,  0.45833333,  0.5       ,  0.54166667,  0.58333333,
+#         0.625     ,  0.66666667,  0.70833333,  0.75      ,  0.79166667,
+#         0.83333333,  0.875     ,  0.91666667,  0.95833333,  1.        ,
+#         1.04166667,  1.08333333,  1.125     ,  1.16666667,  1.20833333,
+#         1.25      ,  1.29166667,  1.33333333,  1.375     ,  1.41666667,
+#         1.45833333,  1.5       ,  1.54166667,  1.58333333,  1.625     ,
+#         1.66666667,  1.70833333,  1.75      ,  1.79166667,  1.83333333,
+#         1.875     ,  1.91666667,  1.95833333,  2.        ,  2.04166667,
+#         2.08333333,  2.125     ,  2.16666667,  2.20833333,  2.25      ,
+#         2.29166667,  2.33333333,  2.375     ,  2.41666667,  2.45833333,
+#         2.5       ,  2.54166667,  2.58333333,  2.625     ,  2.66666667,
+#         2.70833333,  2.75      ,  2.79166667,  2.83333333,  2.875     ,
+#         2.91666667,  2.95833333,  3.        ,  3.04166667,  3.08333333,
+#         3.125     ,  3.16666667,  3.20833333,  3.25      ,  3.29166667,
+#         3.33333333,  3.375     ,  3.41666667,  3.45833333,  3.5       ,
+#         3.54166667,  3.58333333,  3.625     ,  3.66666667,  3.70833333,
+#         3.75      ,  3.79166667,  3.83333333,  3.875     ,  3.91666667,
+#         3.95833333,  4.        ,  4.04166667,  4.08333333,  4.125     ,
+#         4.16666667,  4.20833333,  4.25      ,  4.29166667,  4.33333333,
+#         4.375     ,  4.41666667,  4.45833333,  4.5       ,  4.54166667,
+#         4.58333333,  4.625     ,  4.66666667,  4.70833333,  4.75      ,
+#         4.79166667,  4.83333333,  4.875     ,  4.91666667,  4.95833333,
+#         5.        ,  5.04166667,  5.08333333,  5.125     ,  5.16666667,
+#         5.20833333,  5.25      ,  5.29166667,  5.33333333,  5.375     ,
+#         5.41666667,  5.45833333,  5.5       ,  5.54166667,  5.58333333,
+#         5.625     ,  5.66666667,  5.70833333,  5.75      ,  5.79166667,
+#         5.83333333,  5.875     ,  5.91666667,  5.95833333,  6.        ,
+#         6.04166667,  6.08333333,  6.125     ,  6.16666667,  6.20833333,
+#         6.25      ,  6.29166667,  6.33333333,  6.375     ,  6.41666667,
+#         6.45833333,  6.5       ,  6.54166667,  6.58333333,  6.625     ,
+#         6.66666667,  6.70833333,  6.75      ,  6.79166667,  6.83333333,
+#         6.875     ,  6.91666667,  6.95833333,  7.        ,  7.04166667,
+#         7.08333333,  7.125     ,  7.16666667,  7.20833333,  7.25      ,
+#         7.29166667,  7.33333333,  7.375     ,  7.41666667,  7.45833333,
+#         7.5       ,  7.54166667,  7.58333333,  7.625     ,  7.66666667,
+#         7.70833333,  7.75      ,  7.79166667,  7.83333333,  7.875     ,
+#         7.91666667,  7.95833333,  8.        ,  8.04166667,  8.08333333,
+#         8.125     ,  8.16666667,  8.20833333,  8.25      ,  8.29166667,
+#         8.33333333,  8.375     ,  8.41666667,  8.45833333,  8.5       ,
+#         8.54166667,  8.58333333,  8.625     ,  8.66666667,  8.70833333,
+#         8.75      ,  8.79166667,  8.83333333,  8.875     ,  8.91666667,
+#         8.95833333,  9.        ,  9.04166667,  9.08333333,  9.125     ,
+#         9.16666667,  9.20833333,  9.25      ,  9.29166667,  9.33333333,
+#         9.375     ,  9.41666667,  9.45833333,  9.5       ,  9.54166667,
+#         9.58333333,  9.625     ,  9.66666667,  9.70833333,  9.75      ,
+#         9.79166667,  9.83333333,  9.875     ,  9.91666667,  9.95833333,
+#        10.        , 10.04166667, 10.08333333, 10.125     , 10.16666667,
+#        10.20833333, 10.25      , 10.29166667, 10.33333333, 10.375     ,
+#        10.41666667, 10.45833333, 10.5       , 10.54166667, 10.58333333,
+#        10.625     , 10.66666667, 10.70833333, 10.75      , 10.79166667,
+#        10.83333333, 10.875     , 10.91666667, 10.95833333, 11.        ,
+#        11.04166667, 11.08333333, 11.125     , 11.16666667, 11.20833333,
+#        11.25      , 11.29166667, 11.33333333, 11.375     , 11.41666667,
+#        11.45833333, 11.5       , 11.54166667, 11.58333333, 11.625     ,
+#        11.66666667, 11.70833333, 11.75      , 11.79166667, 11.83333333,
+#        11.875     , 11.91666667, 11.95833333, 12.        , 12.04166667,
+#        12.08333333, 12.125     , 12.16666667, 12.20833333, 12.25      ,
+#        12.29166667, 12.33333333, 12.375     , 12.41666667, 12.45833333,
+#        12.5       , 12.54166667, 12.58333333, 12.625     , 12.66666667,
+#        12.70833333, 12.75      , 12.79166667, 12.83333333, 12.875     ,
+#        12.91666667, 12.95833333, 13.        , 13.04166667, 13.08333333,
+#        13.125     , 13.16666667, 13.20833333, 13.25      , 13.29166667,
+#        13.33333333, 13.375     , 13.41666667, 13.45833333, 13.5       ,
+#        13.54166667, 13.58333333, 13.625     , 13.66666667, 13.70833333,
+#        13.75      , 13.79166667, 13.83333333, 13.875     , 13.91666667,
+#        13.95833333, 14.        , 14.04166667, 14.08333333, 14.125     ,
+#        14.16666667, 14.20833333, 14.25      , 14.29166667, 14.33333333,
+#        14.375     , 14.41666667, 14.45833333, 14.5       , 14.54166667,
+#        14.58333333, 14.625     , 14.66666667, 14.70833333, 14.75      ,
+#        14.79166667, 14.83333333, 14.875     , 14.91666667, 14.95833333,
+#        15.        , 15.04166667, 15.08333333, 15.125     , 15.16666667,
+#        15.20833333, 15.25      , 15.29166667, 15.33333333, 15.375     ,
+#        15.41666667, 15.45833333, 15.5       , 15.54166667, 15.58333333,
+#        15.625     , 15.66666667, 15.70833333, 15.75      , 15.79166667,
+#        15.83333333, 15.875     , 15.91666667, 15.95833333, 16.        ,
+#        16.04166667, 16.08333333, 16.125     , 16.16666667, 16.20833333,
+#        16.25      , 16.29166667, 16.33333333, 16.375     , 16.41666667,
+#        16.45833333, 16.5       , 16.54166667, 16.58333333, 16.625     ,
+#        16.66666667, 16.70833333, 16.75      , 16.79166667, 16.83333333,
+#        16.875     , 16.91666667, 16.95833333, 17.        , 17.04166667,
+#        17.08333333, 17.125     , 17.16666667, 17.20833333, 17.25      ,
+#        17.29166667, 17.33333333, 17.375     , 17.41666667, 17.45833333,
+#        17.5       , 17.54166667, 17.58333333, 17.625     , 17.66666667,
+#        17.70833333, 17.75      , 17.79166667, 17.83333333, 17.875     ,
+#        17.91666667, 17.95833333, 18.        , 18.04166667, 18.08333333,
+#        18.125     , 18.16666667, 18.20833333, 18.25      , 18.29166667,
+#        18.33333333, 18.375     , 18.41666667, 18.45833333, 18.5       ,
+#        18.54166667, 18.58333333, 18.625     , 18.66666667, 18.70833333,
+#        18.75      , 18.79166667, 18.83333333, 18.875     , 18.91666667,
+#        18.95833333, 19.        , 19.04166667, 19.08333333, 19.125     ,
+#        19.16666667, 19.20833333, 19.25      , 19.29166667, 19.33333333,
+#        19.375     , 19.41666667, 19.45833333, 19.5       , 19.54166667,
+#        19.58333333, 19.625     , 19.66666667, 19.70833333, 19.75      ,
+#        19.79166667, 19.83333333, 19.875     , 19.91666667, 19.95833333,
+#        20.        , 20.04166667, 20.08333333, 20.125     , 20.16666667,
+#        20.20833333, 20.25      , 20.29166667, 20.33333333, 20.375     ,
+#        20.41666667, 20.45833333, 20.5       , 20.54166667, 20.58333333,
+#        20.625     , 20.66666667, 20.70833333, 20.75      , 20.79166667,
+#        20.83333333, 20.875     , 20.91666667, 20.95833333, 21.        ,
+#        21.04166667, 21.08333333, 21.125     , 21.16666667, 21.20833333,
+#        21.25      , 21.29166667, 21.33333333, 21.375     , 21.41666667,
+#        21.45833333, 21.5       , 21.54166667, 21.58333333, 21.625     ,
+#        21.66666667, 21.70833333, 21.75      , 21.79166667, 21.83333333,
+#        21.875     , 21.91666667, 21.95833333, 22.        , 22.04166667]), [Text(-1.0416666666666667, 0, '1969-12-30 23:00'), Text(-1.0, 0, '1969-12-31 00:00'), Text(-0.9583333333333334, 0, '1969-12-31 01:00'), Text(-0.9166666666666666, 0, '1969-12-31 02:00'), Text(-0.875, 0, '1969-12-31 03:00'), Text(-0.8333333333333334, 0, '1969-12-31 04:00'), Text(-0.7916666666666666, 0, '1969-12-31 05:00'), Text(-0.75, 0, '1969-12-31 06:00'), Text(-0.7083333333333334, 0, '1969-12-31 07:00'), Text(-0.6666666666666666, 0, '1969-12-31 08:00'), Text(-0.625, 0, '1969-12-31 09:00'), Text(-0.5833333333333334, 0, '1969-12-31 10:00'), Text(-0.5416666666666666, 0, '1969-12-31 11:00'), Text(-0.5, 0, '1969-12-31 12:00'), Text(-0.4583333333333333, 0, '1969-12-31 13:00'), Text(-0.4166666666666667, 0, '1969-12-31 14:00'), Text(-0.375, 0, '1969-12-31 15:00'), Text(-0.3333333333333333, 0, '1969-12-31 16:00'), Text(-0.2916666666666667, 0, '1969-12-31 17:00'), Text(-0.25, 0, '1969-12-31 18:00'), Text(-0.20833333333333334, 0, '1969-12-31 19:00'), Text(-0.16666666666666666, 0, '1969-12-31 20:00'), Text(-0.125, 0, '1969-12-31 21:00'), Text(-0.08333333333333333, 0, '1969-12-31 22:00'), Text(-0.041666666666666664, 0, '1969-12-31 23:00'), Text(0.0, 0, '1970-01-01 00:00'), Text(0.041666666666666664, 0, '1970-01-01 01:00'), Text(0.08333333333333333, 0, '1970-01-01 02:00'), Text(0.125, 0, '1970-01-01 03:00'), Text(0.16666666666666666, 0, '1970-01-01 04:00'), Text(0.20833333333333334, 0, '1970-01-01 05:00'), Text(0.25, 0, '1970-01-01 06:00'), Text(0.2916666666666667, 0, '1970-01-01 07:00'), Text(0.3333333333333333, 0, '1970-01-01 08:00'), Text(0.375, 0, '1970-01-01 09:00'), Text(0.4166666666666667, 0, '1970-01-01 10:00'), Text(0.4583333333333333, 0, '1970-01-01 11:00'), Text(0.5, 0, '1970-01-01 12:00'), Text(0.5416666666666666, 0, '1970-01-01 13:00'), Text(0.5833333333333334, 0, '1970-01-01 14:00'), Text(0.625, 0, '1970-01-01 15:00'), Text(0.6666666666666666, 0, '1970-01-01 16:00'), Text(0.7083333333333334, 0, '1970-01-01 17:00'), Text(0.75, 0, '1970-01-01 18:00'), Text(0.7916666666666666, 0, '1970-01-01 19:00'), Text(0.8333333333333334, 0, '1970-01-01 20:00'), Text(0.875, 0, '1970-01-01 21:00'), Text(0.9166666666666666, 0, '1970-01-01 22:00'), Text(0.9583333333333334, 0, '1970-01-01 23:00'), Text(1.0, 0, '1970-01-02 00:00'), Text(1.0416666666666667, 0, '1970-01-02 01:00'), Text(1.0833333333333333, 0, '1970-01-02 02:00'), Text(1.125, 0, '1970-01-02 03:00'), Text(1.1666666666666667, 0, '1970-01-02 04:00'), Text(1.2083333333333333, 0, '1970-01-02 05:00'), Text(1.25, 0, '1970-01-02 06:00'), Text(1.2916666666666667, 0, '1970-01-02 07:00'), Text(1.3333333333333333, 0, '1970-01-02 08:00'), Text(1.375, 0, '1970-01-02 09:00'), Text(1.4166666666666667, 0, '1970-01-02 10:00'), Text(1.4583333333333333, 0, '1970-01-02 11:00'), Text(1.5, 0, '1970-01-02 12:00'), Text(1.5416666666666667, 0, '1970-01-02 13:00'), Text(1.5833333333333333, 0, '1970-01-02 14:00'), Text(1.625, 0, '1970-01-02 15:00'), Text(1.6666666666666667, 0, '1970-01-02 16:00'), Text(1.7083333333333333, 0, '1970-01-02 17:00'), Text(1.75, 0, '1970-01-02 18:00'), Text(1.7916666666666667, 0, '1970-01-02 19:00'), Text(1.8333333333333333, 0, '1970-01-02 20:00'), Text(1.875, 0, '1970-01-02 21:00'), Text(1.9166666666666667, 0, '1970-01-02 22:00'), Text(1.9583333333333333, 0, '1970-01-02 23:00'), Text(2.0, 0, '1970-01-03 00:00'), Text(2.0416666666666665, 0, '1970-01-03 01:00'), Text(2.0833333333333335, 0, '1970-01-03 02:00'), Text(2.125, 0, '1970-01-03 03:00'), Text(2.1666666666666665, 0, '1970-01-03 04:00'), Text(2.2083333333333335, 0, '1970-01-03 05:00'), Text(2.25, 0, '1970-01-03 06:00'), Text(2.2916666666666665, 0, '1970-01-03 07:00'), Text(2.3333333333333335, 0, '1970-01-03 08:00'), Text(2.375, 0, '1970-01-03 09:00'), Text(2.4166666666666665, 0, '1970-01-03 10:00'), Text(2.4583333333333335, 0, '1970-01-03 11:00'), Text(2.5, 0, '1970-01-03 12:00'), Text(2.5416666666666665, 0, '1970-01-03 13:00'), Text(2.5833333333333335, 0, '1970-01-03 14:00'), Text(2.625, 0, '1970-01-03 15:00'), Text(2.6666666666666665, 0, '1970-01-03 16:00'), Text(2.7083333333333335, 0, '1970-01-03 17:00'), Text(2.75, 0, '1970-01-03 18:00'), Text(2.7916666666666665, 0, '1970-01-03 19:00'), Text(2.8333333333333335, 0, '1970-01-03 20:00'), Text(2.875, 0, '1970-01-03 21:00'), Text(2.9166666666666665, 0, '1970-01-03 22:00'), Text(2.9583333333333335, 0, '1970-01-03 23:00'), Text(3.0, 0, '1970-01-04 00:00'), Text(3.0416666666666665, 0, '1970-01-04 01:00'), Text(3.0833333333333335, 0, '1970-01-04 02:00'), Text(3.125, 0, '1970-01-04 03:00'), Text(3.1666666666666665, 0, '1970-01-04 04:00'), Text(3.2083333333333335, 0, '1970-01-04 05:00'), Text(3.25, 0, '1970-01-04 06:00'), Text(3.2916666666666665, 0, '1970-01-04 07:00'), Text(3.3333333333333335, 0, '1970-01-04 08:00'), Text(3.375, 0, '1970-01-04 09:00'), Text(3.4166666666666665, 0, '1970-01-04 10:00'), Text(3.4583333333333335, 0, '1970-01-04 11:00'), Text(3.5, 0, '1970-01-04 12:00'), Text(3.5416666666666665, 0, '1970-01-04 13:00'), Text(3.5833333333333335, 0, '1970-01-04 14:00'), Text(3.625, 0, '1970-01-04 15:00'), Text(3.6666666666666665, 0, '1970-01-04 16:00'), Text(3.7083333333333335, 0, '1970-01-04 17:00'), Text(3.75, 0, '1970-01-04 18:00'), Text(3.7916666666666665, 0, '1970-01-04 19:00'), Text(3.8333333333333335, 0, '1970-01-04 20:00'), Text(3.875, 0, '1970-01-04 21:00'), Text(3.9166666666666665, 0, '1970-01-04 22:00'), Text(3.9583333333333335, 0, '1970-01-04 23:00'), Text(4.0, 0, '1970-01-05 00:00'), Text(4.041666666666667, 0, '1970-01-05 01:00'), Text(4.083333333333333, 0, '1970-01-05 02:00'), Text(4.125, 0, '1970-01-05 03:00'), Text(4.166666666666667, 0, '1970-01-05 04:00'), Text(4.208333333333333, 0, '1970-01-05 05:00'), Text(4.25, 0, '1970-01-05 06:00'), Text(4.291666666666667, 0, '1970-01-05 07:00'), Text(4.333333333333333, 0, '1970-01-05 08:00'), Text(4.375, 0, '1970-01-05 09:00'), Text(4.416666666666667, 0, '1970-01-05 10:00'), Text(4.458333333333333, 0, '1970-01-05 11:00'), Text(4.5, 0, '1970-01-05 12:00'), Text(4.541666666666667, 0, '1970-01-05 13:00'), Text(4.583333333333333, 0, '1970-01-05 14:00'), Text(4.625, 0, '1970-01-05 15:00'), Text(4.666666666666667, 0, '1970-01-05 16:00'), Text(4.708333333333333, 0, '1970-01-05 17:00'), Text(4.75, 0, '1970-01-05 18:00'), Text(4.791666666666667, 0, '1970-01-05 19:00'), Text(4.833333333333333, 0, '1970-01-05 20:00'), Text(4.875, 0, '1970-01-05 21:00'), Text(4.916666666666667, 0, '1970-01-05 22:00'), Text(4.958333333333333, 0, '1970-01-05 23:00'), Text(5.0, 0, '1970-01-06 00:00'), Text(5.041666666666667, 0, '1970-01-06 01:00'), Text(5.083333333333333, 0, '1970-01-06 02:00'), Text(5.125, 0, '1970-01-06 03:00'), Text(5.166666666666667, 0, '1970-01-06 04:00'), Text(5.208333333333333, 0, '1970-01-06 05:00'), Text(5.25, 0, '1970-01-06 06:00'), Text(5.291666666666667, 0, '1970-01-06 07:00'), Text(5.333333333333333, 0, '1970-01-06 08:00'), Text(5.375, 0, '1970-01-06 09:00'), Text(5.416666666666667, 0, '1970-01-06 10:00'), Text(5.458333333333333, 0, '1970-01-06 11:00'), Text(5.5, 0, '1970-01-06 12:00'), Text(5.541666666666667, 0, '1970-01-06 13:00'), Text(5.583333333333333, 0, '1970-01-06 14:00'), Text(5.625, 0, '1970-01-06 15:00'), Text(5.666666666666667, 0, '1970-01-06 16:00'), Text(5.708333333333333, 0, '1970-01-06 17:00'), Text(5.75, 0, '1970-01-06 18:00'), Text(5.791666666666667, 0, '1970-01-06 19:00'), Text(5.833333333333333, 0, '1970-01-06 20:00'), Text(5.875, 0, '1970-01-06 21:00'), Text(5.916666666666667, 0, '1970-01-06 22:00'), Text(5.958333333333333, 0, '1970-01-06 23:00'), Text(6.0, 0, '1970-01-07 00:00'), Text(6.041666666666667, 0, '1970-01-07 01:00'), Text(6.083333333333333, 0, '1970-01-07 02:00'), Text(6.125, 0, '1970-01-07 03:00'), Text(6.166666666666667, 0, '1970-01-07 04:00'), Text(6.208333333333333, 0, '1970-01-07 05:00'), Text(6.25, 0, '1970-01-07 06:00'), Text(6.291666666666667, 0, '1970-01-07 07:00'), Text(6.333333333333333, 0, '1970-01-07 08:00'), Text(6.375, 0, '1970-01-07 09:00'), Text(6.416666666666667, 0, '1970-01-07 10:00'), Text(6.458333333333333, 0, '1970-01-07 11:00'), Text(6.5, 0, '1970-01-07 12:00'), Text(6.541666666666667, 0, '1970-01-07 13:00'), Text(6.583333333333333, 0, '1970-01-07 14:00'), Text(6.625, 0, '1970-01-07 15:00'), Text(6.666666666666667, 0, '1970-01-07 16:00'), Text(6.708333333333333, 0, '1970-01-07 17:00'), Text(6.75, 0, '1970-01-07 18:00'), Text(6.791666666666667, 0, '1970-01-07 19:00'), Text(6.833333333333333, 0, '1970-01-07 20:00'), Text(6.875, 0, '1970-01-07 21:00'), Text(6.916666666666667, 0, '1970-01-07 22:00'), Text(6.958333333333333, 0, '1970-01-07 23:00'), Text(7.0, 0, '1970-01-08 00:00'), Text(7.041666666666667, 0, '1970-01-08 01:00'), Text(7.083333333333333, 0, '1970-01-08 02:00'), Text(7.125, 0, '1970-01-08 03:00'), Text(7.166666666666667, 0, '1970-01-08 04:00'), Text(7.208333333333333, 0, '1970-01-08 05:00'), Text(7.25, 0, '1970-01-08 06:00'), Text(7.291666666666667, 0, '1970-01-08 07:00'), Text(7.333333333333333, 0, '1970-01-08 08:00'), Text(7.375, 0, '1970-01-08 09:00'), Text(7.416666666666667, 0, '1970-01-08 10:00'), Text(7.458333333333333, 0, '1970-01-08 11:00'), Text(7.5, 0, '1970-01-08 12:00'), Text(7.541666666666667, 0, '1970-01-08 13:00'), Text(7.583333333333333, 0, '1970-01-08 14:00'), Text(7.625, 0, '1970-01-08 15:00'), Text(7.666666666666667, 0, '1970-01-08 16:00'), Text(7.708333333333333, 0, '1970-01-08 17:00'), Text(7.75, 0, '1970-01-08 18:00'), Text(7.791666666666667, 0, '1970-01-08 19:00'), Text(7.833333333333333, 0, '1970-01-08 20:00'), Text(7.875, 0, '1970-01-08 21:00'), Text(7.916666666666667, 0, '1970-01-08 22:00'), Text(7.958333333333333, 0, '1970-01-08 23:00'), Text(8.0, 0, '1970-01-09 00:00'), Text(8.041666666666666, 0, '1970-01-09 01:00'), Text(8.083333333333334, 0, '1970-01-09 02:00'), Text(8.125, 0, '1970-01-09 03:00'), Text(8.166666666666666, 0, '1970-01-09 04:00'), Text(8.208333333333334, 0, '1970-01-09 05:00'), Text(8.25, 0, '1970-01-09 06:00'), Text(8.291666666666666, 0, '1970-01-09 07:00'), Text(8.333333333333334, 0, '1970-01-09 08:00'), Text(8.375, 0, '1970-01-09 09:00'), Text(8.416666666666666, 0, '1970-01-09 10:00'), Text(8.458333333333334, 0, '1970-01-09 11:00'), Text(8.5, 0, '1970-01-09 12:00'), Text(8.541666666666666, 0, '1970-01-09 13:00'), Text(8.583333333333334, 0, '1970-01-09 14:00'), Text(8.625, 0, '1970-01-09 15:00'), Text(8.666666666666666, 0, '1970-01-09 16:00'), Text(8.708333333333334, 0, '1970-01-09 17:00'), Text(8.75, 0, '1970-01-09 18:00'), Text(8.791666666666666, 0, '1970-01-09 19:00'), Text(8.833333333333334, 0, '1970-01-09 20:00'), Text(8.875, 0, '1970-01-09 21:00'), Text(8.916666666666666, 0, '1970-01-09 22:00'), Text(8.958333333333334, 0, '1970-01-09 23:00'), Text(9.0, 0, '1970-01-10 00:00'), Text(9.041666666666666, 0, '1970-01-10 01:00'), Text(9.083333333333334, 0, '1970-01-10 02:00'), Text(9.125, 0, '1970-01-10 03:00'), Text(9.166666666666666, 0, '1970-01-10 04:00'), Text(9.208333333333334, 0, '1970-01-10 05:00'), Text(9.25, 0, '1970-01-10 06:00'), Text(9.291666666666666, 0, '1970-01-10 07:00'), Text(9.333333333333334, 0, '1970-01-10 08:00'), Text(9.375, 0, '1970-01-10 09:00'), Text(9.416666666666666, 0, '1970-01-10 10:00'), Text(9.458333333333334, 0, '1970-01-10 11:00'), Text(9.5, 0, '1970-01-10 12:00'), Text(9.541666666666666, 0, '1970-01-10 13:00'), Text(9.583333333333334, 0, '1970-01-10 14:00'), Text(9.625, 0, '1970-01-10 15:00'), Text(9.666666666666666, 0, '1970-01-10 16:00'), Text(9.708333333333334, 0, '1970-01-10 17:00'), Text(9.75, 0, '1970-01-10 18:00'), Text(9.791666666666666, 0, '1970-01-10 19:00'), Text(9.833333333333334, 0, '1970-01-10 20:00'), Text(9.875, 0, '1970-01-10 21:00'), Text(9.916666666666666, 0, '1970-01-10 22:00'), Text(9.958333333333334, 0, '1970-01-10 23:00'), Text(10.0, 0, '1970-01-11 00:00'), Text(10.041666666666666, 0, '1970-01-11 01:00'), Text(10.083333333333334, 0, '1970-01-11 02:00'), Text(10.125, 0, '1970-01-11 03:00'), Text(10.166666666666666, 0, '1970-01-11 04:00'), Text(10.208333333333334, 0, '1970-01-11 05:00'), Text(10.25, 0, '1970-01-11 06:00'), Text(10.291666666666666, 0, '1970-01-11 07:00'), Text(10.333333333333334, 0, '1970-01-11 08:00'), Text(10.375, 0, '1970-01-11 09:00'), Text(10.416666666666666, 0, '1970-01-11 10:00'), Text(10.458333333333334, 0, '1970-01-11 11:00'), Text(10.5, 0, '1970-01-11 12:00'), Text(10.541666666666666, 0, '1970-01-11 13:00'), Text(10.583333333333334, 0, '1970-01-11 14:00'), Text(10.625, 0, '1970-01-11 15:00'), Text(10.666666666666666, 0, '1970-01-11 16:00'), Text(10.708333333333334, 0, '1970-01-11 17:00'), Text(10.75, 0, '1970-01-11 18:00'), Text(10.791666666666666, 0, '1970-01-11 19:00'), Text(10.833333333333334, 0, '1970-01-11 20:00'), Text(10.875, 0, '1970-01-11 21:00'), Text(10.916666666666666, 0, '1970-01-11 22:00'), Text(10.958333333333334, 0, '1970-01-11 23:00'), Text(11.0, 0, '1970-01-12 00:00'), Text(11.041666666666666, 0, '1970-01-12 01:00'), Text(11.083333333333334, 0, '1970-01-12 02:00'), Text(11.125, 0, '1970-01-12 03:00'), Text(11.166666666666666, 0, '1970-01-12 04:00'), Text(11.208333333333334, 0, '1970-01-12 05:00'), Text(11.25, 0, '1970-01-12 06:00'), Text(11.291666666666666, 0, '1970-01-12 07:00'), Text(11.333333333333334, 0, '1970-01-12 08:00'), Text(11.375, 0, '1970-01-12 09:00'), Text(11.416666666666666, 0, '1970-01-12 10:00'), Text(11.458333333333334, 0, '1970-01-12 11:00'), Text(11.5, 0, '1970-01-12 12:00'), Text(11.541666666666666, 0, '1970-01-12 13:00'), Text(11.583333333333334, 0, '1970-01-12 14:00'), Text(11.625, 0, '1970-01-12 15:00'), Text(11.666666666666666, 0, '1970-01-12 16:00'), Text(11.708333333333334, 0, '1970-01-12 17:00'), Text(11.75, 0, '1970-01-12 18:00'), Text(11.791666666666666, 0, '1970-01-12 19:00'), Text(11.833333333333334, 0, '1970-01-12 20:00'), Text(11.875, 0, '1970-01-12 21:00'), Text(11.916666666666666, 0, '1970-01-12 22:00'), Text(11.958333333333334, 0, '1970-01-12 23:00'), Text(12.0, 0, '1970-01-13 00:00'), Text(12.041666666666666, 0, '1970-01-13 01:00'), Text(12.083333333333334, 0, '1970-01-13 02:00'), Text(12.125, 0, '1970-01-13 03:00'), Text(12.166666666666666, 0, '1970-01-13 04:00'), Text(12.208333333333334, 0, '1970-01-13 05:00'), Text(12.25, 0, '1970-01-13 06:00'), Text(12.291666666666666, 0, '1970-01-13 07:00'), Text(12.333333333333334, 0, '1970-01-13 08:00'), Text(12.375, 0, '1970-01-13 09:00'), Text(12.416666666666666, 0, '1970-01-13 10:00'), Text(12.458333333333334, 0, '1970-01-13 11:00'), Text(12.5, 0, '1970-01-13 12:00'), Text(12.541666666666666, 0, '1970-01-13 13:00'), Text(12.583333333333334, 0, '1970-01-13 14:00'), Text(12.625, 0, '1970-01-13 15:00'), Text(12.666666666666666, 0, '1970-01-13 16:00'), Text(12.708333333333334, 0, '1970-01-13 17:00'), Text(12.75, 0, '1970-01-13 18:00'), Text(12.791666666666666, 0, '1970-01-13 19:00'), Text(12.833333333333334, 0, '1970-01-13 20:00'), Text(12.875, 0, '1970-01-13 21:00'), Text(12.916666666666666, 0, '1970-01-13 22:00'), Text(12.958333333333334, 0, '1970-01-13 23:00'), Text(13.0, 0, '1970-01-14 00:00'), Text(13.041666666666666, 0, '1970-01-14 01:00'), Text(13.083333333333334, 0, '1970-01-14 02:00'), Text(13.125, 0, '1970-01-14 03:00'), Text(13.166666666666666, 0, '1970-01-14 04:00'), Text(13.208333333333334, 0, '1970-01-14 05:00'), Text(13.25, 0, '1970-01-14 06:00'), Text(13.291666666666666, 0, '1970-01-14 07:00'), Text(13.333333333333334, 0, '1970-01-14 08:00'), Text(13.375, 0, '1970-01-14 09:00'), Text(13.416666666666666, 0, '1970-01-14 10:00'), Text(13.458333333333334, 0, '1970-01-14 11:00'), Text(13.5, 0, '1970-01-14 12:00'), Text(13.541666666666666, 0, '1970-01-14 13:00'), Text(13.583333333333334, 0, '1970-01-14 14:00'), Text(13.625, 0, '1970-01-14 15:00'), Text(13.666666666666666, 0, '1970-01-14 16:00'), Text(13.708333333333334, 0, '1970-01-14 17:00'), Text(13.75, 0, '1970-01-14 18:00'), Text(13.791666666666666, 0, '1970-01-14 19:00'), Text(13.833333333333334, 0, '1970-01-14 20:00'), Text(13.875, 0, '1970-01-14 21:00'), Text(13.916666666666666, 0, '1970-01-14 22:00'), Text(13.958333333333334, 0, '1970-01-14 23:00'), Text(14.0, 0, '1970-01-15 00:00'), Text(14.041666666666666, 0, '1970-01-15 01:00'), Text(14.083333333333334, 0, '1970-01-15 02:00'), Text(14.125, 0, '1970-01-15 03:00'), Text(14.166666666666666, 0, '1970-01-15 04:00'), Text(14.208333333333334, 0, '1970-01-15 05:00'), Text(14.25, 0, '1970-01-15 06:00'), Text(14.291666666666666, 0, '1970-01-15 07:00'), Text(14.333333333333334, 0, '1970-01-15 08:00'), Text(14.375, 0, '1970-01-15 09:00'), Text(14.416666666666666, 0, '1970-01-15 10:00'), Text(14.458333333333334, 0, '1970-01-15 11:00'), Text(14.5, 0, '1970-01-15 12:00'), Text(14.541666666666666, 0, '1970-01-15 13:00'), Text(14.583333333333334, 0, '1970-01-15 14:00'), Text(14.625, 0, '1970-01-15 15:00'), Text(14.666666666666666, 0, '1970-01-15 16:00'), Text(14.708333333333334, 0, '1970-01-15 17:00'), Text(14.75, 0, '1970-01-15 18:00'), Text(14.791666666666666, 0, '1970-01-15 19:00'), Text(14.833333333333334, 0, '1970-01-15 20:00'), Text(14.875, 0, '1970-01-15 21:00'), Text(14.916666666666666, 0, '1970-01-15 22:00'), Text(14.958333333333334, 0, '1970-01-15 23:00'), Text(15.0, 0, '1970-01-16 00:00'), Text(15.041666666666666, 0, '1970-01-16 01:00'), Text(15.083333333333334, 0, '1970-01-16 02:00'), Text(15.125, 0, '1970-01-16 03:00'), Text(15.166666666666666, 0, '1970-01-16 04:00'), Text(15.208333333333334, 0, '1970-01-16 05:00'), Text(15.25, 0, '1970-01-16 06:00'), Text(15.291666666666666, 0, '1970-01-16 07:00'), Text(15.333333333333334, 0, '1970-01-16 08:00'), Text(15.375, 0, '1970-01-16 09:00'), Text(15.416666666666666, 0, '1970-01-16 10:00'), Text(15.458333333333334, 0, '1970-01-16 11:00'), Text(15.5, 0, '1970-01-16 12:00'), Text(15.541666666666666, 0, '1970-01-16 13:00'), Text(15.583333333333334, 0, '1970-01-16 14:00'), Text(15.625, 0, '1970-01-16 15:00'), Text(15.666666666666666, 0, '1970-01-16 16:00'), Text(15.708333333333334, 0, '1970-01-16 17:00'), Text(15.75, 0, '1970-01-16 18:00'), Text(15.791666666666666, 0, '1970-01-16 19:00'), Text(15.833333333333334, 0, '1970-01-16 20:00'), Text(15.875, 0, '1970-01-16 21:00'), Text(15.916666666666666, 0, '1970-01-16 22:00'), Text(15.958333333333334, 0, '1970-01-16 23:00'), Text(16.0, 0, '1970-01-17 00:00'), Text(16.041666666666668, 0, '1970-01-17 01:00'), Text(16.083333333333332, 0, '1970-01-17 02:00'), Text(16.125, 0, '1970-01-17 03:00'), Text(16.166666666666668, 0, '1970-01-17 04:00'), Text(16.208333333333332, 0, '1970-01-17 05:00'), Text(16.25, 0, '1970-01-17 06:00'), Text(16.291666666666668, 0, '1970-01-17 07:00'), Text(16.333333333333332, 0, '1970-01-17 08:00'), Text(16.375, 0, '1970-01-17 09:00'), Text(16.416666666666668, 0, '1970-01-17 10:00'), Text(16.458333333333332, 0, '1970-01-17 11:00'), Text(16.5, 0, '1970-01-17 12:00'), Text(16.541666666666668, 0, '1970-01-17 13:00'), Text(16.583333333333332, 0, '1970-01-17 14:00'), Text(16.625, 0, '1970-01-17 15:00'), Text(16.666666666666668, 0, '1970-01-17 16:00'), Text(16.708333333333332, 0, '1970-01-17 17:00'), Text(16.75, 0, '1970-01-17 18:00'), Text(16.791666666666668, 0, '1970-01-17 19:00'), Text(16.833333333333332, 0, '1970-01-17 20:00'), Text(16.875, 0, '1970-01-17 21:00'), Text(16.916666666666668, 0, '1970-01-17 22:00'), Text(16.958333333333332, 0, '1970-01-17 23:00'), Text(17.0, 0, '1970-01-18 00:00'), Text(17.041666666666668, 0, '1970-01-18 01:00'), Text(17.083333333333332, 0, '1970-01-18 02:00'), Text(17.125, 0, '1970-01-18 03:00'), Text(17.166666666666668, 0, '1970-01-18 04:00'), Text(17.208333333333332, 0, '1970-01-18 05:00'), Text(17.25, 0, '1970-01-18 06:00'), Text(17.291666666666668, 0, '1970-01-18 07:00'), Text(17.333333333333332, 0, '1970-01-18 08:00'), Text(17.375, 0, '1970-01-18 09:00'), Text(17.416666666666668, 0, '1970-01-18 10:00'), Text(17.458333333333332, 0, '1970-01-18 11:00'), Text(17.5, 0, '1970-01-18 12:00'), Text(17.541666666666668, 0, '1970-01-18 13:00'), Text(17.583333333333332, 0, '1970-01-18 14:00'), Text(17.625, 0, '1970-01-18 15:00'), Text(17.666666666666668, 0, '1970-01-18 16:00'), Text(17.708333333333332, 0, '1970-01-18 17:00'), Text(17.75, 0, '1970-01-18 18:00'), Text(17.791666666666668, 0, '1970-01-18 19:00'), Text(17.833333333333332, 0, '1970-01-18 20:00'), Text(17.875, 0, '1970-01-18 21:00'), Text(17.916666666666668, 0, '1970-01-18 22:00'), Text(17.958333333333332, 0, '1970-01-18 23:00'), Text(18.0, 0, '1970-01-19 00:00'), Text(18.041666666666668, 0, '1970-01-19 01:00'), Text(18.083333333333332, 0, '1970-01-19 02:00'), Text(18.125, 0, '1970-01-19 03:00'), Text(18.166666666666668, 0, '1970-01-19 04:00'), Text(18.208333333333332, 0, '1970-01-19 05:00'), Text(18.25, 0, '1970-01-19 06:00'), Text(18.291666666666668, 0, '1970-01-19 07:00'), Text(18.333333333333332, 0, '1970-01-19 08:00'), Text(18.375, 0, '1970-01-19 09:00'), Text(18.416666666666668, 0, '1970-01-19 10:00'), Text(18.458333333333332, 0, '1970-01-19 11:00'), Text(18.5, 0, '1970-01-19 12:00'), Text(18.541666666666668, 0, '1970-01-19 13:00'), Text(18.583333333333332, 0, '1970-01-19 14:00'), Text(18.625, 0, '1970-01-19 15:00'), Text(18.666666666666668, 0, '1970-01-19 16:00'), Text(18.708333333333332, 0, '1970-01-19 17:00'), Text(18.75, 0, '1970-01-19 18:00'), Text(18.791666666666668, 0, '1970-01-19 19:00'), Text(18.833333333333332, 0, '1970-01-19 20:00'), Text(18.875, 0, '1970-01-19 21:00'), Text(18.916666666666668, 0, '1970-01-19 22:00'), Text(18.958333333333332, 0, '1970-01-19 23:00'), Text(19.0, 0, '1970-01-20 00:00'), Text(19.041666666666668, 0, '1970-01-20 01:00'), Text(19.083333333333332, 0, '1970-01-20 02:00'), Text(19.125, 0, '1970-01-20 03:00'), Text(19.166666666666668, 0, '1970-01-20 04:00'), Text(19.208333333333332, 0, '1970-01-20 05:00'), Text(19.25, 0, '1970-01-20 06:00'), Text(19.291666666666668, 0, '1970-01-20 07:00'), Text(19.333333333333332, 0, '1970-01-20 08:00'), Text(19.375, 0, '1970-01-20 09:00'), Text(19.416666666666668, 0, '1970-01-20 10:00'), Text(19.458333333333332, 0, '1970-01-20 11:00'), Text(19.5, 0, '1970-01-20 12:00'), Text(19.541666666666668, 0, '1970-01-20 13:00'), Text(19.583333333333332, 0, '1970-01-20 14:00'), Text(19.625, 0, '1970-01-20 15:00'), Text(19.666666666666668, 0, '1970-01-20 16:00'), Text(19.708333333333332, 0, '1970-01-20 17:00'), Text(19.75, 0, '1970-01-20 18:00'), Text(19.791666666666668, 0, '1970-01-20 19:00'), Text(19.833333333333332, 0, '1970-01-20 20:00'), Text(19.875, 0, '1970-01-20 21:00'), Text(19.916666666666668, 0, '1970-01-20 22:00'), Text(19.958333333333332, 0, '1970-01-20 23:00'), Text(20.0, 0, '1970-01-21 00:00'), Text(20.041666666666668, 0, '1970-01-21 01:00'), Text(20.083333333333332, 0, '1970-01-21 02:00'), Text(20.125, 0, '1970-01-21 03:00'), Text(20.166666666666668, 0, '1970-01-21 04:00'), Text(20.208333333333332, 0, '1970-01-21 05:00'), Text(20.25, 0, '1970-01-21 06:00'), Text(20.291666666666668, 0, '1970-01-21 07:00'), Text(20.333333333333332, 0, '1970-01-21 08:00'), Text(20.375, 0, '1970-01-21 09:00'), Text(20.416666666666668, 0, '1970-01-21 10:00'), Text(20.458333333333332, 0, '1970-01-21 11:00'), Text(20.5, 0, '1970-01-21 12:00'), Text(20.541666666666668, 0, '1970-01-21 13:00'), Text(20.583333333333332, 0, '1970-01-21 14:00'), Text(20.625, 0, '1970-01-21 15:00'), Text(20.666666666666668, 0, '1970-01-21 16:00'), Text(20.708333333333332, 0, '1970-01-21 17:00'), Text(20.75, 0, '1970-01-21 18:00'), Text(20.791666666666668, 0, '1970-01-21 19:00'), Text(20.833333333333332, 0, '1970-01-21 20:00'), Text(20.875, 0, '1970-01-21 21:00'), Text(20.916666666666668, 0, '1970-01-21 22:00'), Text(20.958333333333332, 0, '1970-01-21 23:00'), Text(21.0, 0, '1970-01-22 00:00'), Text(21.041666666666668, 0, '1970-01-22 01:00'), Text(21.083333333333332, 0, '1970-01-22 02:00'), Text(21.125, 0, '1970-01-22 03:00'), Text(21.166666666666668, 0, '1970-01-22 04:00'), Text(21.208333333333332, 0, '1970-01-22 05:00'), Text(21.25, 0, '1970-01-22 06:00'), Text(21.291666666666668, 0, '1970-01-22 07:00'), Text(21.333333333333332, 0, '1970-01-22 08:00'), Text(21.375, 0, '1970-01-22 09:00'), Text(21.416666666666668, 0, '1970-01-22 10:00'), Text(21.458333333333332, 0, '1970-01-22 11:00'), Text(21.5, 0, '1970-01-22 12:00'), Text(21.541666666666668, 0, '1970-01-22 13:00'), Text(21.583333333333332, 0, '1970-01-22 14:00'), Text(21.625, 0, '1970-01-22 15:00'), Text(21.666666666666668, 0, '1970-01-22 16:00'), Text(21.708333333333332, 0, '1970-01-22 17:00'), Text(21.75, 0, '1970-01-22 18:00'), Text(21.791666666666668, 0, '1970-01-22 19:00'), Text(21.833333333333332, 0, '1970-01-22 20:00'), Text(21.875, 0, '1970-01-22 21:00'), Text(21.916666666666668, 0, '1970-01-22 22:00'), Text(21.958333333333332, 0, '1970-01-22 23:00'), Text(22.0, 0, '1970-01-23 00:00'), Text(22.041666666666668, 0, '1970-01-23 01:00')])]]
+
+#+begin_src shell
+cp -rfv ./images/* /home/sebastianmorales/proyecto/weather-site/public/images
+#+end_src
+
+#+RESULTS:
+| './images/humidity_2024-08-13.png'    | -> | '/home/sebastianmorales/proyecto/weather-site/public/images/humidity_2024-08-13.png'    |
+| './images/temperature.png'            | -> | '/home/sebastianmorales/proyecto/weather-site/public/images/temperature.png'            |
+| './images/temperature_2024-08-13.png' | -> | '/home/sebastianmorales/proyecto/weather-site/public/images/temperature_2024-08-13.png' |
+
+#+caption: Gráfica Humedad vs Tiempo
+#+RESULTS:
+file:/home/sebastianmorales/proyecto/weather-site/public/images/humidity_2024-08-13.png
+
+* Referencias
+- [[https://emacs.stackexchange.com/questions/28715/get-pandas-data-frame-as-a-table-in-org-babel][presentar dataframe como tabla en emacs org]]
+- [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][Python Source Code Blocks in Org Mode]]
+- [[https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/][Systems Crafters Construir tu sitio web con Modo Emacs Org]]
+- [[https://www.youtube.com/watch?v=AfkrzFodoNw][Vídeo Youtube Build Your Website with Org Mode]]
+* Footnotes
+
+[fn:1] Recuerde que su máquina ha de disponer de un entorno de
+anaconda/mamba denominado iccd332 en el cual se dispone del interprete
+de Python
